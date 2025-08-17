@@ -93,7 +93,7 @@ ASGI_APPLICATION = "apps_config.asgi.application"
 
 # User Model Configuration Setting
 # --------------------------------
-AUTH_USER_MODEL = "accounts.User"
+AUTH_USER_MODEL = "auth.User"
 
 # Default primary key field type Configuration Setting
 # ----------------------------------------------------
