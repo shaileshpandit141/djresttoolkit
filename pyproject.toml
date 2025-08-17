@@ -82,6 +82,7 @@ dev = [
     "pyyaml>=6.0.2",
     "pydantic-settings>=2.10.1",
     "daphne>=4.2.1",
+    "django-redis>=6.0.0",
 ]
 
 # =====================
