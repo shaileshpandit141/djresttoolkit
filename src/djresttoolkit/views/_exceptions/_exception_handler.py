@@ -9,58 +9,56 @@ from rest_framework.throttling import AnonRateThrottle
 
 
 def exception_handler(exc: Exception, context: dict[str, Any]) -> Response | None:
-    """Hnadle throttle classes."""
+    """
+    Custom exception handler that preserves DRF's default functionality
+    while adding custom throttling behavior.
+    """
 
-    request: Request | None = context.get("request")
+    # Call DRF's default exception handler first
     response: Response | None = views.exception_handler(exc, context)
 
-    # Apply throttling before exception is raised
-    if request:
-        view = context.get("view")
-        if view:
-            throttle_classes: list[type[AnonRateThrottle]] = getattr(
-                view, "throttle_classes", []
-            )
-            if not throttle_classes:
-                throttle_classes = [AnonRateThrottle]
+    request: Request | None = context.get("request")
+    view = context.get("view")
 
-            # Iterate over the list of throttles class
-            for throttle_class in throttle_classes:
-                throttle = throttle_class()  # Instantiate the throttle class
-                cache_key = throttle.get_cache_key(request, view)
-                if cache_key:
-                    history: list[float] = cache.get(cache_key, [])
-                    now = timezone.now().timestamp()
-                    duration: float = cast(float, throttle.duration)  # type: ignore[attr-defined]
+    if request and view:
+        # Pick throttle classes from view or default to AnonRateThrottle
+        throttle_classes: list[type[AnonRateThrottle]] = getattr(
+            view, "throttle_classes", [AnonRateThrottle]
+        )
 
-                    # Remove expired requests from history
-                    history = [
-                        float(ts) for ts in history if now - float(ts) < duration
-                    ]
+        for throttle_class in throttle_classes:
+            throttle = throttle_class()
+            cache_key = throttle.get_cache_key(request, view)
+            if not cache_key:
+                continue
 
-                    # Check if throttle limit is exceeded or not
-                    if len(history) > throttle.num_requests:  # type: ignore[attr-defined]
-                        retry_after: float = duration
-                        if history:
-                            retry_after = duration - (now - history[0])
+            history: list[float] = cache.get(cache_key, [])
+            now = timezone.now().timestamp()
+            duration: float = cast(float, throttle.duration)  # type: ignore[attr-defined]
 
-                        response = Response(
-                            data={
-                                "detail": "Too many requests. Please try again later.",
-                                "retry_after": {
-                                    "time": retry_after,
-                                    "unit": "seconds",
-                                },
-                            },
-                            status=status.HTTP_429_TOO_MANY_REQUESTS,
-                        )
+            # Keep only non-expired timestamps
+            history = [float(ts) for ts in history if now - float(ts) < duration]
 
-                        # Return the response with 429 status code
-                        return response
-                    else:
-                        # Otherwise, add the current request to history and update cache
-                        history.append(now)
-                        cache.set(key=cache_key, value=history, timeout=duration)
+            # If throttle limit exceeded
+            if len(history) >= throttle.num_requests:  # type: ignore[attr-defined]
+                retry_after: float = (
+                    duration - (now - history[0]) if history else duration
+                )
 
-    # Return un updaed response instance
+                return Response(
+                    data={
+                        "detail": "Too many requests. Please try again later.",
+                        "retry_after": {
+                            "time": round(retry_after, 2),
+                            "unit": "seconds",
+                        },
+                    },
+                    status=status.HTTP_429_TOO_MANY_REQUESTS,
+                )
+
+            # Otherwise add current timestamp
+            history.append(now)
+            cache.set(key=cache_key, value=history, timeout=duration)
+
+    # If DRF handled the exception, return that response
     return response
