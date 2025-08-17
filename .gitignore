@@ -8,5 +8,6 @@ wheels/
 
 # Virtual environments
 .venv
-demo/.environ.yaml
+**/.env
+**/.environ.yaml
 temp.py
