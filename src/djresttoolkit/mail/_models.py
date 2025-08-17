@@ -30,7 +30,7 @@ class Email(BaseModel):
 
     This model combines the essential parts of an email, including:
     - subject line
-    - participants (sender, recipients, and optional cc/bcc)
+    - from_email the sender email
     - a rendering context for template variables
     - associated text and/or HTML templates
 
@@ -38,9 +38,8 @@ class Email(BaseModel):
     ----------
     subject : str
         The subject line of the email.
-    addresses : EmailParticipants
-        The participants of the email, including sender, recipients,
-        and optional cc/bcc addresses.
+    from_email : EmailStr | None
+        The from_email of the sender email
     context : dict[str, Any] | None, default=None
         Optional context data used to render template variables
         inside the email body (e.g., {"username": "Alice"}).
