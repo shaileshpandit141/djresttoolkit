@@ -102,8 +102,10 @@ djresttoolkit = { workspace = true }
 # ============
 [project.urls]
 Homepage = "https://github.com/shaileshpandit141/djresttoolkit"
-Repository = "https://github.com/shaileshpandit141/djresttoolkit"
+Documentation = "https://shaileshpandit141.github.io/djresttoolkit"
+Source = "https://github.com/shaileshpandit141/djresttoolkit"
 Issues = "https://github.com/shaileshpandit141/djresttoolkit/issues"
+License = "https://github.com/shaileshpandit141/djresttoolkit/blob/main/LICENSE"
 
 # ===================
 # Tool Configurations
