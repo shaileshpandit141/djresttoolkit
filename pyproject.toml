@@ -79,6 +79,9 @@ dev = [
     "djangorestframework-stubs>=3.16.2",
     "pytest>=8.4.1",
     "djresttoolkit",
+    "pyyaml>=6.0.2",
+    "pydantic-settings>=2.10.1",
+    "daphne>=4.2.1",
 ]
 
 # =====================
