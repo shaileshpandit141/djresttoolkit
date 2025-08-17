@@ -84,7 +84,7 @@ dev = [
     "daphne>=4.2.1",
     "django-redis>=6.0.0",
     "django-cors-headers>=4.7.0",
-    "argon2>=0.1.10",
+    "argon2-cffi-bindings>=21.2.0",
 ]
 
 # =====================
