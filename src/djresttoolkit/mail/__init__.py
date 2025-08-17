@@ -1,9 +1,9 @@
-from ._models import Email, EmailTemplate
-from ._types import EmailDict, EmailTemplateDict
+from ._models import EmailContent, EmailTemplate
+from ._types import EmailContentDict, EmailTemplateDict
 
 __all__ = [
-    "Email",
+    "EmailContent",
     "EmailTemplate",
-    "EmailDict",
+    "EmailContentDict",
     "EmailTemplateDict",
 ]

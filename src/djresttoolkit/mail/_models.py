@@ -24,14 +24,14 @@ class EmailTemplate(BaseModel):
         return v
 
 
-class Email(BaseModel):
+class EmailContent(BaseModel):
     """
-    Represents a fully configured email message.
+    Represents the content of an email ready for rendering.
 
-    This model combines the essential parts of an email, including:
+    This model combines the key parts of an email, including:
     - subject line
-    - from_email the sender email
-    - a rendering context for template variables
+    - sender email (from_email)
+    - rendering context for template variables
     - associated text and/or HTML templates
 
     Attributes
@@ -39,13 +39,12 @@ class Email(BaseModel):
     subject : str
         The subject line of the email.
     from_email : EmailStr | None
-        The from_email of the sender email
-    context : dict[str, Any] | None, default=None
-        Optional context data used to render template variables
-        inside the email body (e.g., {"username": "Alice"}).
+        Sender's email address.
+    context : dict[str, Any] | None
+        Optional context data used to render templates (e.g., {"username": "Alice"}).
     template : EmailTemplate
-        The templates used for the email body. Can include plain text
-        (.txt) and/or HTML (.html) versions.
+        Templates for the email body (.txt and/or .html).
+
     """
 
     subject: str

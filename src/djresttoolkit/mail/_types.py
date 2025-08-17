@@ -10,7 +10,7 @@ class EmailTemplateDict(TypedDict):
     html: str  # HTML version    html: str  # HTML version
 
 
-class EmailDict(TypedDict):
+class EmailContentDict(TypedDict):
     """
     Represents a fully configured email message.
 
