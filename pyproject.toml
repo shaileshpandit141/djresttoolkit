@@ -45,7 +45,9 @@ keywords = [
     "python-package",
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "pydantic>=2.11.7",
+]
 
 # CLI scripts entry point configuration
 # -------------------------------------
