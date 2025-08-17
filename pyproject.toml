@@ -70,7 +70,14 @@ include = [
 # Dependency groups
 # =================
 [dependency-groups]
-dev = ["drutils", "pytest>=8.4.1"]
+dev = [
+    "django>=5.2.5",
+    "django-stubs>=5.2.2",
+    "djangorestframework>=3.16.1",
+    "djangorestframework-stubs>=3.16.2",
+    "pytest>=8.4.1",
+    "drutils",
+]
 
 # =====================
 # Optional dependencies
