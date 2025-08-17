@@ -1,17 +1,112 @@
+# ==========================
+# Main project configuration 
+# ==========================
+
 [project]
 name = "drutils"
 version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
+description = "A collection of Django and DRF utilities to simplify API development."
+readme = { file = "README.md", content-type = "text/markdown" }
+license = { file = "LICENSE" }
 authors = [
-    { name = "shaileshpandit141", email = "shaileshpandit141@gmail.com" }
+    { name = "shaileshpandit141", email = "shaileshpandit141@gmail.com" },
+]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Framework :: Django",
+    "Framework :: Django :: 4.0",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Typing :: Typed",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Utilities",
+]
+keywords = [
+    "django",
+    "djangorestframework",
+    "drf",
+    "django-utilities",
+    "django-rest-utilities",
+    "django-rest-framework-utilities",
+    "django-helpers",
+    "django-rest",
+    "rest-api",
+    "api-development",
+    "django-email",
+    "django-authentication",
+    "django-serializers",
+    "django-pagination",
+    "django-mixins",
+    "django-shortcuts",
+    "python-package",
 ]
 requires-python = ">=3.13"
 dependencies = []
 
+# CLI scripts entry point configuration
+# -------------------------------------
 [project.scripts]
-drutils = "drutils:main"
+drutils = "drutils:entry_point"
 
+# ==========================
+# Build system configuration
+# ==========================
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+# =================
+# Dependency groups
+# =================
+[dependency-groups]
+dev = ["drutils", "pytest>=8.4.1"]
+
+# =====================
+# Optional dependencies
+# =====================
+[project.optional-dependencies]
+dev = ["pytest", "mypy", "ruff"]
+
+# ===============
+# UV tool sources
+# ===============
+[tool.uv.sources]
+drutils = { workspace = true }
+
+# ============
+# Package data
+# ============
+[tool.setuptools.package-data]
+"drutils" = ["py.typed"]
+
+# ============
+# Project URLs
+# ============
+[project.urls]
+Homepage = "https://github.com/shaileshpandit141/drutils"
+Repository = "https://github.com/shaileshpandit141/drutils"
+Issues = "https://github.com/shaileshpandit141/drutils/issues"
+
+# ===================
+# Tool Configurations
+# ===================
+
+# Disable ruff S101 rule for test casecases
+# -----------------------------------------
+[tool.ruff.lint.per-file-ignores]
+"tests/*.py" = ["S101"]
+
+# ====================
+# Pytest configuration
+# ====================
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-v"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
