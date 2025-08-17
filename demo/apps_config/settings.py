@@ -12,7 +12,7 @@ SECRET_KEY = env_settings.secret_key
 
 # DEBUG Configuration Settings
 # ----------------------------
-DEBUG = False
+DEBUG = True
 
 # Allowed Host Configuration Settings
 # -----------------------------------
@@ -41,7 +41,7 @@ INSTALLED_APPS = [
 
 # Third-party applications Settings
 # ---------------------------------
-INSTALLED_APPS.extend(["rest_framework"])
+INSTALLED_APPS.extend(["rest_framework", "corsheaders"])
 
 # User Define applications Settings
 # ---------------------------------
@@ -62,7 +62,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "rest_core.middlewares.ResponseTimeMiddleware",
 ]
 
 # Root urls file Configuration Settings
@@ -104,7 +103,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DATABASES: dict[str, dict[str, object]] = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": BASE_DIR / "demo/db.sqlite3",
     }
 }
 
@@ -123,11 +122,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # Using multiple algorithms provides additional security layers
 # -------------------------------------------------------------
 PASSWORD_HASHERS = [
-    "django.contrib.auth.hashers.Argon2PasswordHasher",
     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
     "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
     "django.contrib.auth.hashers.ScryptPasswordHasher",
-    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
 ]
 
 # Internationalization Configuration Settings
@@ -140,9 +139,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # STATIC AND MEDIA FILES Configuration Settings
 # ---------------------------------------------
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_URL = "/demo/static/"
+STATIC_ROOT = BASE_DIR / "demo/staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "demo/static"]
 
 # Configure media files (User-uploaded files)
 # -------------------------------------------
@@ -168,9 +167,9 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_THROTTLE_RATES": {
         "anon": "100/day",
-        "auth": "8/hour",
         "user": "1000/day",
     },
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 4,
     "MAX_PAGE_SIZE": 8,
     "DEFAULT_FILTER_BACKENDS": [

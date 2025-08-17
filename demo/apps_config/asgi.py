@@ -1,16 +1,10 @@
-"""
-ASGI config for apps_config project.
-
-It exposes the ASGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/5.1/howto/deployment/asgi/
-"""
-
 import os
 
+# Import Django's ASGI handler
 from django.core.asgi import get_asgi_application
 
+# Configure Django settings module path
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "apps_config.settings")
 
+# Create ASGI application instance
 application = get_asgi_application()
