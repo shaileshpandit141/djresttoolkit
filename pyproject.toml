@@ -59,6 +59,13 @@ drutils = "drutils:entry_point"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build]
+include = [
+  "drutils",
+  "LICENSE",
+  "README.md",
+]
+
 # =================
 # Dependency groups
 # =================
