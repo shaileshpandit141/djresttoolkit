@@ -83,6 +83,7 @@ dev = [
     "pydantic-settings>=2.10.1",
     "daphne>=4.2.1",
     "django-redis>=6.0.0",
+    "django-cors-headers>=4.7.0",
 ]
 
 # =====================
