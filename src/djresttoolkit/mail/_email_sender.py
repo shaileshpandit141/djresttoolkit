@@ -32,3 +32,9 @@ class EmailSender:
     ) -> None:
         """Initialize email sender class."""
         self.email_content = email_content
+
+    def _get_email_content(self) -> EmailContentDict:
+        """Convert pydantic mode to python dict."""
+        if isinstance(self.email_content, EmailContent):
+            return cast(EmailContentDict, self.email_content.model_dump())
+        return self.email_content
