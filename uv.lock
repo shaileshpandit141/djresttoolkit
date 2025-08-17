@@ -131,7 +131,7 @@ wheels = [
 ]
 
 [[package]]
-name = "drutils"
+name = "djrestutils"
 version = "0.1.0"
 source = { editable = "." }
 
@@ -148,7 +148,7 @@ dev = [
     { name = "django-stubs" },
     { name = "djangorestframework" },
     { name = "djangorestframework-stubs" },
-    { name = "drutils" },
+    { name = "djrestutils" },
     { name = "pytest" },
 ]
 
@@ -166,7 +166,7 @@ dev = [
     { name = "django-stubs", specifier = ">=5.2.2" },
     { name = "djangorestframework", specifier = ">=3.16.1" },
     { name = "djangorestframework-stubs", specifier = ">=3.16.2" },
-    { name = "drutils", editable = "." },
+    { name = "djrestutils", editable = "." },
     { name = "pytest", specifier = ">=8.4.1" },
 ]
 

@@ -1,10 +1,10 @@
-# 🛠️ drutils (django rest utils)
+# 🛠️ djrestutils (django rest utils)
 
-[![PyPI version](https://img.shields.io/pypi/v/drutils.svg)](https://pypi.org/project/drutils/)
-[![Python versions](https://img.shields.io/pypi/pyversions/drutils.svg)](https://pypi.org/project/drutils/)
-[![License](https://img.shields.io/pypi/l/drutils.svg)](https://github.com/shaileshpandit141/drutils/blob/main/LICENSE)
+[![PyPI version](https://img.shields.io/pypi/v/djrestutils.svg)](https://pypi.org/project/djrestutils/)
+[![Python versions](https://img.shields.io/pypi/pyversions/djrestutils.svg)](https://pypi.org/project/djrestutils/)
+[![License](https://img.shields.io/pypi/l/djrestutils.svg)](https://github.com/shaileshpandit141/djrestutils/blob/main/LICENSE)
 
-drutils is a collection of utilities and helpers for Django and Django REST Framework (DRF) that simplify common development tasks such as API handling, authentication, and email sending and much more.
+djrestutils is a collection of utilities and helpers for Django and Django REST Framework (DRF) that simplify common development tasks such as API handling, authentication, and email sending and much more.
 
 ## ✨ Features
 
@@ -19,13 +19,13 @@ drutils is a collection of utilities and helpers for Django and Django REST Fram
 - **By using uv:**
   
     ```bash
-    uv add drutils
+    uv add djrestutils
     ````
 
 - **By using pip:**
 
     ```bash
-    pip install drutils
+    pip install djrestutils
     ````
 
 ## 📚 API Reference
