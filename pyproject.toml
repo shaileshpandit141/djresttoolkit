@@ -3,7 +3,7 @@
 # ==========================
 
 [project]
-name = "djrestutils"
+name = "djresttoolkit"
 version = "0.1.0"
 description = "A collection of Django and DRF utilities to simplify API development."
 readme = { file = "README.md", content-type = "text/markdown" }
@@ -50,7 +50,7 @@ dependencies = []
 # CLI scripts entry point configuration
 # -------------------------------------
 [project.scripts]
-djrestutils = "djrestutils:entry_point"
+djresttoolkit = "djresttoolkit:entry_point"
 
 # ==========================
 # Build system configuration
@@ -61,7 +61,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build]
 include = [
-  "djrestutils",
+  "djresttoolkit",
   "LICENSE",
   "README.md",
 ]
@@ -76,7 +76,7 @@ dev = [
     "djangorestframework>=3.16.1",
     "djangorestframework-stubs>=3.16.2",
     "pytest>=8.4.1",
-    "djrestutils",
+    "djresttoolkit",
 ]
 
 # =====================
@@ -89,21 +89,21 @@ dev = ["pytest", "mypy", "ruff"]
 # UV tool sources
 # ===============
 [tool.uv.sources]
-djrestutils = { workspace = true }
+djresttoolkit = { workspace = true }
 
 # ============
 # Package data
 # ============
 [tool.setuptools.package-data]
-"djrestutils" = ["py.typed"]
+"djresttoolkit" = ["py.typed"]
 
 # ============
 # Project URLs
 # ============
 [project.urls]
-Homepage = "https://github.com/shaileshpandit141/djrestutils"
-Repository = "https://github.com/shaileshpandit141/djrestutils"
-Issues = "https://github.com/shaileshpandit141/djrestutils/issues"
+Homepage = "https://github.com/shaileshpandit141/djresttoolkit"
+Repository = "https://github.com/shaileshpandit141/djresttoolkit"
+Issues = "https://github.com/shaileshpandit141/djresttoolkit/issues"
 
 # ===================
 # Tool Configurations
