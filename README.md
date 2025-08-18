@@ -119,6 +119,53 @@ REST_FRAMEWORK = {
 - Tracks requests in cache and calculates `retry_after`.
 - Cleans expired timestamps automatically.
 
+### 3. Response Time Middleware
+
+```python
+from djresttoolkit.middlewares import ResponseTimeMiddleware
+```
+
+### `ResponseTimeMiddleware`
+
+Middleware to calculate and log **HTTP response time** for each request.
+
+#### Constructor
+
+```python
+ResponseTimeMiddleware(get_response: Callable[[HttpRequest], HttpResponse])
+```
+
+- `get_response`: The next middleware or view callable.
+
+#### Usage
+
+Add it to your Django `MIDDLEWARE` in `settings.py`:
+
+```python
+MIDDLEWARE = [
+    # Other middlewares...
+    'djresttoolkit.middlewares.ResponseTimeMiddleware',
+]
+```
+
+#### Behavior
+
+- Measures the time taken to process each request.
+- Adds a header `X-Response-Time` to each HTTP response.
+- Logs the response time using Django's logging system.
+
+#### The response headers will include
+
+```json
+X-Response-Time: 0.01234 seconds
+```
+
+#### Logs a message
+
+```bash
+INFO: Request processed in 0.01234 seconds
+```
+
 ## 🛠️ Planned Features
 
 - Add more utils
