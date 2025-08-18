@@ -177,7 +177,7 @@ REST_FRAMEWORK = {
         "rest_framework.parsers.MultiPartParser",
     ],
     "DEFAULT_RENDERER_CLASSES": [
-        "rest_framework.renderers.JSONRenderer",
+        "djresttoolkit.renderers.ThrottleInfoJSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
     ],
     "DEFAULT_THROTTLE_CLASSES": [
