@@ -1,7 +1,9 @@
 from typing import Any, cast
 
+from django.conf import settings
 from django.core.cache import cache
 from django.utils import timezone
+from django.utils.module_loading import import_string
 from rest_framework import status, views
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -26,6 +28,15 @@ def exception_handler(exc: Exception, context: dict[str, Any]) -> Response | Non
             view, "throttle_classes", [AnonRateThrottle]
         )
 
+        # Set default throttles if user doesn't provide
+        default = settings.REST_FRAMEWORK.get("DEFAULT_THROTTLE_CLASSES", [])
+        if not throttle_classes:
+            if default:
+                throttle_classes = []
+                for path in default:
+                    throttle_classes.append(import_string(path))
+
+        # Handle all throttles by looping it
         for throttle_class in throttle_classes:
             throttle = throttle_class()
             cache_key = throttle.get_cache_key(request, view)
