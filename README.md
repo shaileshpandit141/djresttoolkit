@@ -79,6 +79,46 @@ EmailSender(content).send(to=["user@example.com"])
 
 - `text`, `html` — template file paths
 
+### 2. Custom DRF Exception Handler
+
+```python
+from djresttoolkit.views import exception_handler
+```
+
+### `exception_handler(exc: Exception, context: dict[str, Any]) -> Response | None`
+
+A DRF exception handler that:
+
+- Preserves DRF’s default exception behavior.
+- Adds throttling support (defaults to `AnonRateThrottle`).
+- Returns **429 Too Many Requests** with `retry_after` if throttle limit is exceeded.
+
+#### Parameters
+
+- `exc`: Exception object.
+- `context`: DRF context dictionary containing `"request"` and `"view"`.
+
+#### Returns
+
+- `Response` — DRF Response object (with throttling info if applicable), or `None`.
+
+#### Settings Configuration
+
+In `settings.py`:
+
+```python
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'djresttoolkit.views.exception_handler',
+    # Other DRF settings...
+}
+```
+
+#### Throttle Behavior
+
+- Uses `view.throttle_classes` if defined, else defaults to `AnonRateThrottle`.
+- Tracks requests in cache and calculates `retry_after`.
+- Cleans expired timestamps automatically.
+
 ## 🛠️ Planned Features
 
 - Add more utils
