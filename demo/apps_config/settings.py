@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 from env_config import env_settings
@@ -5,6 +6,11 @@ from env_config import env_settings
 # Configuration Settings File for the django backend
 # --------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+# Add `src` to PYTHONPATH so "djresttoolkit" is importable
+# --------------------------------------------------------
+SRC_DIR = BASE_DIR / "src"
+sys.path.insert(0, str(SRC_DIR))
 
 # Security Configuration Settings
 # -------------------------------
@@ -53,6 +59,7 @@ INSTALLED_APPS.extend(
 # ---------------------------------
 INSTALLED_APPS.extend(
     [
+        "djresttoolkit",
         "apps.todos.apps.TodosConfig",
     ]
 )
@@ -68,6 +75,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "djresttoolkit.middlewares.ResponseTimeMiddleware"
 ]
 
 # Root urls file Configuration Settings
@@ -109,7 +117,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DATABASES: dict[str, dict[str, object]] = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "demo/db.sqlite3",
+        "NAME": BASE_DIR / "demo" / "db.sqlite3",
     }
 }
 
@@ -146,8 +154,8 @@ USE_TZ = True
 # STATIC AND MEDIA FILES Configuration Settings
 # ---------------------------------------------
 STATIC_URL = "/demo/static/"
-STATIC_ROOT = BASE_DIR / "demo/staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "demo/static"]
+STATIC_ROOT = BASE_DIR / "demo" / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "demo" / "static"]
 
 # Configure media files (User-uploaded files)
 # -------------------------------------------
@@ -182,6 +190,7 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
     ],
+    'EXCEPTION_HANDLER': "djresttoolkit.views.exception_handler",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 4,
     "MAX_PAGE_SIZE": 8,
