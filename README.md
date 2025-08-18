@@ -30,7 +30,54 @@ djresttoolkit is a collection of utilities and helpers for Django and Django RES
 
 ## 📚 API Reference
 
-### Under the development
+### 1. EmailSender
+
+```python
+from djresttoolkit.mail import EmailSender, EmailContent, EmailTemplate
+```
+
+### `EmailSender`
+
+Send templated emails.
+
+#### Init
+
+```python
+EmailSender(email_content: EmailContent | EmailContentDict)
+```
+
+#### Methods
+
+```python
+send(to: list[str], exceptions: bool = False) -> bool
+```
+
+- `to`: recipient emails
+- `exceptions`: raise on error if `True`, else logs error
+- Returns `True` if sent, `False` on failure
+
+#### Example
+
+```python
+content = EmailContent(
+    subject="Hello",
+    from_email="noreply@example.com",
+    context={"username": "Alice"},
+    template=EmailTemplate(
+        text="emails/welcome.txt",
+        html="emails/welcome.html"
+    )
+)
+EmailSender(content).send(to=["user@example.com"])
+```
+
+#### `EmailContent`
+
+- `subject`, `from_email`, `context`, `template` (EmailTemplate)
+
+#### `EmailTemplate`
+
+- `text`, `html` — template file paths
 
 ## 🛠️ Planned Features
 

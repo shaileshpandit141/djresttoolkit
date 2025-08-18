@@ -5,7 +5,6 @@ from typing import cast
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
-from pydantic import EmailStr
 
 from ._models import EmailContent
 from ._types import EmailContentDict
@@ -30,7 +29,7 @@ class EmailSender:
 
     Methods
     -------
-    send(to: list[EmailStr], exceptions: bool = False) -> bool
+    send(to: list[str], exceptions: bool = False) -> bool
         Sends the email to the given recipients.
         - `exceptions=True` riase exceptions on failure and returns False if `exceptions=False`.
 
@@ -64,7 +63,7 @@ class EmailSender:
 
     def send(
         self,
-        to: list[EmailStr],
+        to: list[str],
         exceptions: bool = False,
     ) -> bool:
         """Send email to recipients."""
