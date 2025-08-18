@@ -41,7 +41,13 @@ INSTALLED_APPS = [
 
 # Third-party applications Settings
 # ---------------------------------
-INSTALLED_APPS.extend(["rest_framework", "corsheaders"])
+INSTALLED_APPS.extend(
+    [
+        "rest_framework",
+        "rest_framework.authtoken",
+        "corsheaders",
+    ]
+)
 
 # User Define applications Settings
 # ---------------------------------
@@ -152,14 +158,18 @@ MEDIA_URL = "/media/"
 # -------------------------------------
 REST_FRAMEWORK = {
     "NON_FIELD_ERRORS_KEY": "non_field",
-    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
     "DEFAULT_PARSER_CLASSES": [
         "rest_framework.parsers.JSONParser",
-        "rest_framework.parsers.FormParser",
         "rest_framework.parsers.MultiPartParser",
     ],
     "DEFAULT_RENDERER_CLASSES": [
-        "rest_framework.renderers.StructuredJSONRenderer",
+        "rest_framework.renderers.JSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
     ],
     "DEFAULT_THROTTLE_CLASSES": [
@@ -169,12 +179,12 @@ REST_FRAMEWORK = {
         "anon": "100/day",
         "user": "1000/day",
     },
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 4,
-    "MAX_PAGE_SIZE": 8,
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
     ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 4,
+    "MAX_PAGE_SIZE": 8,
 }
 
 # Authentication Configuration Settings
