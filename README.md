@@ -129,7 +129,7 @@ from djresttoolkit.middlewares import ResponseTimeMiddleware
 
 Middleware to calculate and log **HTTP response time** for each request.
 
-#### Constructor
+#### Constructor from ResponseTimeMiddleware
 
 ```python
 ResponseTimeMiddleware(get_response: Callable[[HttpRequest], HttpResponse])
@@ -165,6 +165,62 @@ X-Response-Time: 0.01234 seconds
 ```bash
 INFO: Request processed in 0.01234 seconds
 ```
+
+### 4. Throttle Utilities
+
+#### `ThrottleInfoJSONRenderer`
+
+```python
+from djresttoolkit.renderers import ThrottleInfoJSONRenderer
+```
+
+A custom DRF JSON renderer that **automatically attaches throttle information to response headers**.
+
+#### Usage (settings.py)
+
+```python
+REST_FRAMEWORK = {
+    "DEFAULT_RENDERER_CLASSES": [
+        "djresttoolkit.renderers.ThrottleInfoJSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+    ],
+}
+```
+
+When enabled, every response includes throttle headers like:
+
+```plaintext
+X-Throttle-User-Limit: 100
+X-Throttle-User-Remaining: 98
+X-Throttle-User-Reset: 2025-08-18T07:30:00Z
+X-Throttle-User-Retry-After: 0
+```
+
+#### `ThrottleInspector`
+
+```python
+from djresttoolkit.throttling import ThrottleInspector
+```
+
+Utility class to **inspect DRF throttle usage** for a view or request.
+
+#### Constructor for ThrottleInspector
+
+```python
+ThrottleInspector(
+    view: APIView,
+    request: Request | None = None,
+    throttle_classes: list[type[BaseThrottle]] | None = None,
+)
+```
+
+#### Key Methods
+
+- `get_details() -> dict[str, Any]`
+  Returns structured throttle info: limit, remaining, reset time, retry\_after.
+
+- `attach_headers(response: Response, throttle_info: dict | None)`
+  Attaches throttle data to HTTP headers.
 
 ## 🛠️ Planned Features
 
