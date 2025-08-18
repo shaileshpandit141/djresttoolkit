@@ -143,7 +143,7 @@ class ThrottleInspector:
     def attach_headers(
         self,
         response: Response,
-        throttle_details: dict[str, Any] | None,
+        throttle_info: dict[str, Any] | None,
     ) -> None:
         """
         Attaches throttle details to response headers in DRF-style.
@@ -154,10 +154,10 @@ class ThrottleInspector:
             X-Throttle-{throttle_type}-Reset
             X-Throttle-{throttle_type}-Retry-After (in seconds)
         """
-        if not throttle_details:
+        if not throttle_info:
             return
 
-        for throttle_type, data in throttle_details.get("throttles", {}).items():
+        for throttle_type, data in throttle_info.get("throttles", {}).items():
             response[f"X-Throttle-{throttle_type}-Limit"] = str(data.get("limit", ""))
             response[f"X-Throttle-{throttle_type}-Remaining"] = str(
                 data.get("remaining", "")
