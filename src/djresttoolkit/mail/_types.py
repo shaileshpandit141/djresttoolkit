@@ -1,7 +1,5 @@
 from typing import Any, TypedDict
 
-from pydantic import EmailStr
-
 
 class EmailTemplateDict(TypedDict):
     """Template for rendering email content."""
@@ -23,6 +21,6 @@ class EmailContentDict(TypedDict):
     """
 
     subject: str
-    from_email: EmailStr | None
+    from_email: str | None
     context: dict[str, Any] | None
     template: EmailTemplateDict

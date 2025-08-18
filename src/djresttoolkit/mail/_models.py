@@ -1,6 +1,6 @@
 from typing import Any
 
-from pydantic import BaseModel, EmailStr, field_validator
+from pydantic import BaseModel, field_validator
 
 
 class EmailTemplate(BaseModel):
@@ -48,6 +48,6 @@ class EmailContent(BaseModel):
     """
 
     subject: str
-    from_email: EmailStr | None
+    from_email: str | None
     context: dict[str, Any] | None = None
     template: EmailTemplate
