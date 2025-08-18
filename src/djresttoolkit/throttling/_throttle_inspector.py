@@ -1,6 +1,7 @@
 import logging
 import re
 from datetime import timedelta
+from datetime import timezone as dt_timezone
 from typing import TYPE_CHECKING, Any
 
 from django.conf import settings
@@ -104,7 +105,7 @@ class ThrottleInspector:
 
         remaining = max(0, limit - len(history))
         first_request_time = (  # type: ignore
-            timezone.datetime.fromtimestamp(history[0], tz=timezone.utc)  # type: ignore[attr-defined]
+            timezone.datetime.fromtimestamp(history[0], tz=dt_timezone.utc)  # type: ignore[attr-defined]
             if history
             else timezone.now()
         )
