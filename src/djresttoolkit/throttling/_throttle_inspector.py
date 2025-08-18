@@ -1,14 +1,19 @@
 import logging
 import re
 from datetime import timedelta
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from django.conf import settings
 from django.utils import timezone
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.throttling import BaseThrottle, UserRateThrottle
-from rest_framework.views import APIView
+
+if TYPE_CHECKING:
+    from rest_framework.views import APIView
+    ViewType = APIView
+else:
+    ViewType = object
 
 # Get logger from logging.
 logger = logging.getLogger(__name__)
@@ -22,7 +27,7 @@ class ThrottleInspector:
 
     def __init__(
         self,
-        view: object | APIView,
+        view: ViewType,
         request: Request | None = None,
         throttle_classes: list[type[BaseThrottle]] | None = None,
     ) -> None:
