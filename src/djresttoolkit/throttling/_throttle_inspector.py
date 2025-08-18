@@ -11,6 +11,7 @@ from rest_framework.throttling import BaseThrottle, UserRateThrottle
 
 if TYPE_CHECKING:
     from rest_framework.views import APIView
+
     ViewType = APIView
 else:
     ViewType = object
@@ -96,7 +97,8 @@ class ThrottleInspector:
             }
 
         cache_key = throttle.get_cache_key(
-            self.request, getattr(self.view, "view", self.view)  # type: ignore
+            self.request,
+            getattr(self.view, "view", self.view),  # type: ignore
         )  # type: ignore
         history: list[Any] = throttle.cache.get(cache_key, []) if cache_key else []
 
