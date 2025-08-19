@@ -19,7 +19,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "--count",
             type=int,
-            default=10,
+            default=5,
             help="Number of records per model",
         )
         parser.add_argument(
@@ -87,10 +87,10 @@ class Command(BaseCommand):
             django_model = dbseed_cls.get_meta().model
             created_count: int = 0
 
-            with transaction.atomic():
-                for _ in range(count):
-                    data, m2m_fields = dbseed_cls.create_instance()
-                    try:
+            for _ in range(count):
+                try:
+                    with transaction.atomic():
+                        data, m2m_fields = dbseed_cls.create_instance()
                         obj = django_model.objects.create(**data)
                         created_count += 1
 
@@ -103,11 +103,11 @@ class Command(BaseCommand):
                                 else []
                             )
                             getattr(obj, m2m_field.name).set(related_instances)
-                    except Exception as error:
-                        self.stderr.write(
-                            f"Error creating {django_model.__name__} instance: {error}"
-                        )
-                        continue
+                except Exception as error:
+                    self.stderr.write(
+                        f"Error creating {django_model.__name__} instance: {error}"
+                    )
+                    continue
             self.stdout.write(
                 self.style.SUCCESS(
                     f"{created_count} records inserted for {django_model.__name__}"
