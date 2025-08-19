@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand, CommandParser
 from django.db import transaction
 from django.db.models import Model, QuerySet
 
-from djresttoolkit.dbseed.models import BaseDBSeedModel
+from djresttoolkit.dbseed.models import BaseSeedModel
 
 
 class Command(BaseCommand):
@@ -48,7 +48,7 @@ class Command(BaseCommand):
             faker = Faker()
             faker.seed_instance(seed)
 
-        dbseed_model_classes: list[type[BaseDBSeedModel]] = []
+        seed_model_classes: list[type[BaseSeedModel]] = []
 
         # Discover all dbseed dirs in installed apps
         for app_config in apps.get_app_configs():
@@ -67,8 +67,8 @@ class Command(BaseCommand):
                     attr = getattr(submodule, attr_name)
                     if (
                         isinstance(attr, type)
-                        and issubclass(attr, BaseDBSeedModel)
-                        and attr is not BaseDBSeedModel
+                        and issubclass(attr, BaseSeedModel)
+                        and attr is not BaseSeedModel
                     ):
                         # Filter by model name if provided
                         if (
@@ -76,14 +76,14 @@ class Command(BaseCommand):
                             or model_name.lower()
                             == attr.__name__.replace("DBSeedModel", "").lower()
                         ):
-                            dbseed_model_classes.append(attr)
+                            seed_model_classes.append(attr)
 
-        if not dbseed_model_classes:
+        if not seed_model_classes:
             self.stdout.write(self.style.WARNING("No matching dbseed models found."))
             return None
 
         # Generate fake data for each discovered dbseed model
-        for dbseed_cls in dbseed_model_classes:
+        for dbseed_cls in seed_model_classes:
             django_model = dbseed_cls.get_meta().model
             created_count: int = 0
 
