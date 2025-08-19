@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from django.db.models import ForeignKey, ManyToManyField, Model, OneToOneField
-from pydantic import BaseModel, PrivateAttr
+from pydantic import BaseModel
 
 
 class BaseDBSeedModel(BaseModel):
@@ -15,15 +15,17 @@ class BaseDBSeedModel(BaseModel):
     class Meta:
         model: type[Model]
 
-    _meta: type[Meta] = PrivateAttr()
-
     def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)
         if not hasattr(cls, "Meta") or not hasattr(cls.Meta, "model"):
             raise TypeError(
-                f"{cls.__name__} must define a Meta class with django model"
+                f"{cls.__name__} must define a Meta class with a Django model"
             )
-        cls._meta = cls.Meta
+
+    @classmethod
+    def get_meta(cls) -> type[Meta]:
+        """Class-level access."""
+        return cls.Meta
 
     @classmethod
     def create_instance(cls) -> tuple[dict[str, Any], list[ManyToManyField[Any, Any]]]:
@@ -33,13 +35,13 @@ class BaseDBSeedModel(BaseModel):
         data = cls().model_dump()
 
         # Handle ForeignKey and OneToOneField
-        for field in cls._meta.model._meta.get_fields():
+        for field in cls.get_meta().model._meta.get_fields():
             if isinstance(field, (ForeignKey, OneToOneField)):
                 rel_model = field.remote_field.model
                 if rel_model.objects.exists():
                     # For OneToOne, must ensure unique (pick unused relation)
                     if isinstance(field, OneToOneField):
-                        used_ids = cls._meta.model.objects.values_list(
+                        used_ids = cls.get_meta().model.objects.values_list(
                             field.name, flat=True
                         )
                         available = rel_model.objects.exclude(pk__in=used_ids)
@@ -51,7 +53,7 @@ class BaseDBSeedModel(BaseModel):
         # Collect ManyToMany fields
         m2m_fields: list[ManyToManyField[Any, Any]] = [
             field
-            for field in cls._meta.model._meta.get_fields()
+            for field in cls.get_meta().model._meta.get_fields()
             if isinstance(field, ManyToManyField)
         ]
         return data, m2m_fields
