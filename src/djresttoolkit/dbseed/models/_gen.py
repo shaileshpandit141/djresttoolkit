@@ -1,4 +1,5 @@
 from faker import Faker
+from pydantic import Field as PydField
 
 
 class Generator:
@@ -6,4 +7,5 @@ class Generator:
     def create_faker(cls) -> Faker:
         return Faker()
 
-generator = Generator.create_faker()
+Gen = Generator.create_faker()
+Field = PydField
