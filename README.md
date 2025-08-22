@@ -28,9 +28,64 @@ djresttoolkit is a collection of utilities and helpers for Django and Django RES
     pip install djresttoolkit
     ````
 
-## 📚 API Reference
+## 📚 All API Reference
 
-### 1. EmailSender
+### 1. DB Seed Utilities
+
+#### `Generator`
+
+```python
+from djresttoolkit.dbseed.models import Generator, Gen, Field
+```
+
+- `Gen`: Pre-initialized **Faker** instance for generating fake data.
+- `Field`: Alias for `pydantic.Field` to define seed model fields.
+
+#### Example
+
+```python
+from djresttoolkit.dbseed.models import SeedModel
+from myapp.models import User
+
+class UserSeedModel(SeedModel):
+    __model__ = User
+
+    username: str = Field(default_factory=lambda: Gen.user_name())
+    email: str = Field(default_factory=lambda: Gen.email())
+```
+
+#### `manage.py` Command: `dbseed`
+
+Seed the database from all `dbseed` directories in installed apps.
+
+```bash
+python manage.py dbseed [--count 5] [--model User] [--seed 42]
+```
+
+#### Options
+
+- `--count`: Number of records per model (default: 5).
+- `--model`: Specific model name to seed (optional).
+- `--seed`: Faker seed for reproducible data (optional).
+
+#### Behavior
+
+- Auto-discovers all `dbseed` models in installed apps.
+- Handles ForeignKey, OneToOneField, and ManyToMany relationships.
+- Uses transactions to ensure safe creation of records.
+- Logs errors for failed instance creation but continues seeding.
+
+#### Command Example
+
+```bash
+# Seed 10 records for all models
+python manage.py dbseed --count 10
+
+# Seed only the User model with fixed Faker seed
+python manage.py dbseed --model User --seed 42
+```
+
+### 2. EmailSender
 
 ```python
 from djresttoolkit.mail import EmailSender, EmailContent, EmailTemplate
@@ -56,7 +111,7 @@ send(to: list[str], exceptions: bool = False) -> bool
 - `exceptions`: raise on error if `True`, else logs error
 - Returns `True` if sent, `False` on failure
 
-#### Example
+#### Example for sending an email
 
 ```python
 content = EmailContent(
@@ -79,7 +134,7 @@ EmailSender(content).send(to=["user@example.com"])
 
 - `text`, `html` — template file paths
 
-### 2. Custom DRF Exception Handler
+### 3. Custom DRF Exception Handler
 
 ```python
 from djresttoolkit.views import exception_handler
@@ -119,7 +174,7 @@ REST_FRAMEWORK = {
 - Tracks requests in cache and calculates `retry_after`.
 - Cleans expired timestamps automatically.
 
-### 3. Response Time Middleware
+### 4. Response Time Middleware
 
 ```python
 from djresttoolkit.middlewares import ResponseTimeMiddleware
@@ -148,7 +203,7 @@ MIDDLEWARE = [
 ]
 ```
 
-#### Behavior
+#### Response Time Middleware Behavior
 
 - Measures the time taken to process each request.
 - Adds a header `X-Response-Time` to each HTTP response.
@@ -166,7 +221,7 @@ X-Response-Time: 0.01234 seconds
 INFO: Request processed in 0.01234 seconds
 ```
 
-### 4. Throttle Utilities
+### 5. Throttle Utilities
 
 #### `ThrottleInfoJSONRenderer`
 
