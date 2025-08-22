@@ -3,7 +3,6 @@ from djresttoolkit.dbseed.models import (  # type: ignore[import-not-found]
     Gen,
     SeedModel,
 )
-from django.utils import timezone
 
 from ..models import Todo, TodoPriority, TodoStatus
 
@@ -31,9 +30,4 @@ class TodoSeedModel(SeedModel):
         default_factory=lambda: Gen.random_element(
             elements=[choice[0] for choice in TodoStatus.choices]
         ),
-    )
-    completed_at: str | None = Field(
-        default_factory=lambda: Gen.date_time_this_year(
-            before_now=False, after_now=True
-        ).replace(tzinfo=timezone.get_current_timezone()).isoformat(),
     )
