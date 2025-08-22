@@ -74,7 +74,7 @@ class Command(BaseCommand):
                         if (
                             not model_name
                             or model_name.lower()
-                            == attr.__name__.replace("DBSeedModel", "").lower()
+                            == attr.__name__.replace("SeedModel", "").lower()
                         ):
                             seed_model_classes.append(attr)
 
