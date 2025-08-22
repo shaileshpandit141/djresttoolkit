@@ -84,7 +84,7 @@ class Command(BaseCommand):
 
         # Generate fake data for each discovered dbseed model
         for dbseed_cls in seed_model_classes:
-            django_model = dbseed_cls.get_meta().model
+            django_model = dbseed_cls.get_model()
             created_count: int = 0
 
             for _ in range(count):

@@ -8,7 +8,6 @@ from ..models import Tag
 
 
 class TagSeedModel(SeedModel):
-    class Meta(SeedModel.Meta):
-        model = Tag
+    __model__ = Tag
 
     name: str = Field(default_factory=Gen.word)
