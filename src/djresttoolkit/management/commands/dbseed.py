@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand, CommandParser
 from django.db import transaction
 from django.db.models import Model, QuerySet
 
-from djresttoolkit.dbseed.models import BaseSeedModel
+from djresttoolkit.dbseed.models import SeedModel
 
 
 class Command(BaseCommand):
@@ -48,7 +48,7 @@ class Command(BaseCommand):
             faker = Faker()
             faker.seed_instance(seed)
 
-        seed_model_classes: list[type[BaseSeedModel]] = []
+        seed_model_classes: list[type[SeedModel]] = []
 
         # Discover all dbseed dirs in installed apps
         for app_config in apps.get_app_configs():
@@ -67,8 +67,8 @@ class Command(BaseCommand):
                     attr = getattr(submodule, attr_name)
                     if (
                         isinstance(attr, type)
-                        and issubclass(attr, BaseSeedModel)
-                        and attr is not BaseSeedModel
+                        and issubclass(attr, SeedModel)
+                        and attr is not SeedModel
                     ):
                         # Filter by model name if provided
                         if (

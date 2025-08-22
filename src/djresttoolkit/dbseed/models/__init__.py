@@ -1,4 +1,4 @@
-from ._base_seed_model import BaseSeedModel
 from ._gen import Field, Gen
+from ._seed_model import SeedModel
 
-__all__ = ["BaseSeedModel", "Gen", "Field"]
+__all__ = ["SeedModel", "Gen", "Field"]

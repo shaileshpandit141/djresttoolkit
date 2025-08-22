@@ -6,7 +6,7 @@ from django.db.models import ForeignKey, ManyToManyField, Model, OneToOneField
 from pydantic import BaseModel
 
 
-class BaseSeedModel(BaseModel):
+class SeedModel(BaseModel):
     """
     Base class for all fake data models.
     Each subclass must define a `model` attribute.
