@@ -38,7 +38,6 @@ class TagAdmin(TagAdminBase):
     list_display = ["id", "name"]
     list_display_links = list_display
     ordering = ("-id",)
-    list_filter = ["name"]
     search_fields = ["name"]
 
 
