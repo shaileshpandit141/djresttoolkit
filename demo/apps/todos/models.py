@@ -35,6 +35,7 @@ class TodoStatus(TextChoices):
 
 class BaseModel(Model):
     """Abstract base with UUID PK and timestamps."""
+
     id: BigAutoField[int, int] = BigAutoField(primary_key=True, editable=False)
     uuid: UUIDField[UUID, str] = UUIDField(
         unique=True,
@@ -87,7 +88,7 @@ class Todo(BaseModel):
         self.save(update_fields=["status", "completed_at", "updated_at"])
 
     def __str__(self) -> str:
-        return f"{self.id} {self.title}"
+        return f"Todo({self.id}, {self.title})"
 
 
 class Tag(BaseModel):
@@ -96,7 +97,7 @@ class Tag(BaseModel):
     name: CharField[str, str] = CharField(max_length=50, unique=True)
 
     def __str__(self) -> str:
-        return self.name
+        return f"Tag({self.id}, {self.name})"
 
 
 class TodoTag(Model):
