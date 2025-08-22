@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from djresttoolkit.dbseed.models import (  # type: ignore[import-not-found]
     Field,
     Gen,
@@ -19,7 +21,7 @@ class TodoSeedModel(SeedModel):
     due_date: str | None = Field(
         default_factory=lambda: Gen.date_time_this_year(
             before_now=False, after_now=True
-        ).isoformat(),
+        ).replace(tzinfo=timezone.get_current_timezone()).isoformat(),
     )
     priority: str = Field(
         default_factory=lambda: Gen.random_element(
@@ -30,4 +32,9 @@ class TodoSeedModel(SeedModel):
         default_factory=lambda: Gen.random_element(
             elements=[choice[0] for choice in TodoStatus.choices]
         ),
+    )
+    completed_at: str | None = Field(
+        default_factory=lambda: Gen.date_time_this_year(
+            before_now=False, after_now=True
+        ).replace(tzinfo=timezone.get_current_timezone()).isoformat(),
     )
