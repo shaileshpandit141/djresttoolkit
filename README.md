@@ -85,7 +85,67 @@ python manage.py dbseed --count 10
 python manage.py dbseed --model User --seed 42
 ```
 
-### 2. EmailSender
+Here’s a **concise API reference** for your database flush management command for `djresttoolkit`:
+
+---
+
+### 2. DB Flush Command
+
+```python
+from djresttoolkit.management.commands import flush
+```
+
+#### `manage.py dbflush`
+
+Command to **delete all records** from the database for all models or a specific model and **reset auto-increment IDs**.
+
+#### Usage
+
+```bash
+python manage.py flush [--model ModelName] [--yes]
+```
+
+#### dbflush command options
+
+- `--model`: Name of the model to flush (case-sensitive, e.g., `User`). If omitted, flushes all models.
+- `--yes`: Skip confirmation prompt. Without this, the command asks for confirmation before deleting.
+
+#### dbflush command behavior
+
+- Deletes all records for the specified model or all models.
+- Resets primary key sequences for supported databases:
+
+  - PostgreSQL: `ALTER SEQUENCE ... RESTART WITH 1`
+  - SQLite: Deletes from `sqlite_sequence` table
+  - Others: Logs a warning (not implemented).
+- Uses transactions to ensure safe operations.
+
+#### dbflush command example
+
+```bash
+# Flush all models with confirmation
+python manage.py dbflush
+
+# Flush a specific model (User) with confirmation
+python manage.py dbflush --model User
+
+# Flush all models without prompt
+python manage.py dbflush --yes
+```
+
+#### Output
+
+```bash
+Flushed 10 records from model "User" and reset IDs.
+```
+
+or
+
+```bash
+Flushed 120 records from all models and reset IDs.
+```
+
+### 3. EmailSender
 
 ```python
 from djresttoolkit.mail import EmailSender, EmailContent, EmailTemplate
@@ -134,7 +194,7 @@ EmailSender(content).send(to=["user@example.com"])
 
 - `text`, `html` — template file paths
 
-### 3. Custom DRF Exception Handler
+### 4. Custom DRF Exception Handler
 
 ```python
 from djresttoolkit.views import exception_handler
@@ -174,7 +234,7 @@ REST_FRAMEWORK = {
 - Tracks requests in cache and calculates `retry_after`.
 - Cleans expired timestamps automatically.
 
-### 4. Response Time Middleware
+### 5. Response Time Middleware
 
 ```python
 from djresttoolkit.middlewares import ResponseTimeMiddleware
@@ -192,7 +252,7 @@ ResponseTimeMiddleware(get_response: Callable[[HttpRequest], HttpResponse])
 
 - `get_response`: The next middleware or view callable.
 
-#### Usage
+#### Response Time Middleware Usage
 
 Add it to your Django `MIDDLEWARE` in `settings.py`:
 
@@ -221,7 +281,7 @@ X-Response-Time: 0.01234 seconds
 INFO: Request processed in 0.01234 seconds
 ```
 
-### 5. Throttle Utilities
+### 6. Throttle Utilities
 
 #### `ThrottleInfoJSONRenderer`
 
