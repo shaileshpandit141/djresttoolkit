@@ -10,4 +10,7 @@ wheels/
 .venv
 **/.env
 **/.environ.yaml
+
+# Other files
 temp.py
+**/db.sqlite3
