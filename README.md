@@ -145,7 +145,72 @@ or
 Flushed 120 records from all models and reset IDs.
 ```
 
-### 3. EmailSender
+### 3. EnvBaseSettings
+
+```python
+from djresttoolkit.envconfig import EnvBaseSettings
+```
+
+#### `EnvBaseSettings`
+
+A **base settings class** for managing application configuration using:
+
+- YAML files (default `.environ.yaml`)
+- Environment variables (default `.env`)
+
+Supports **nested configuration** using double underscores (`__`) in environment variable names.
+
+#### Class Attributes
+
+| Attribute      | Type                 | Default         | Description                                                        |
+| -------------- | -------------------- | --------------- | ------------------------------------------------------------------ |
+| `env_file`     | `str`                | `.env`          | Environment variable file path.                                    |
+| `yaml_file`    | `str`                | `.environ.yaml` | YAML configuration file path.                                      |
+| `model_config` | `SettingsConfigDict` | —               | Pydantic settings configuration (file encoding, nested delimiter). |
+
+#### Methods
+
+#### `load(cls, *, env_file: str | None = None, ymal_file: str | None = None, warning: bool = True) -> EnvBaseSettings`
+
+Loads configuration from **YAML first**, then overrides with **environment variables**.
+
+#### Parameters
+
+- `env_file` — Optional custom `.env` file path.
+- `ymal_file` — Optional custom YAML file path.
+- `warning` — Emit a warning if YAML file is missing (default `True`).
+
+#### Returns
+
+- Instance of `EnvBaseSettings` (or subclass) with loaded configuration.
+
+#### Raises
+
+- `UserWarning` if YAML file not found and `warning=True`.
+
+### Usage Example
+
+```python
+from djresttoolkit.envconfig import EnvBaseSettings
+
+class EnvSettings(EnvBaseSettings):
+    debug: bool = False
+    database_url: str
+
+# Load settings
+settings = EnvSettings.load(warning=False)
+
+print(settings.debug)
+print(settings.database_url)
+```
+
+#### Features
+
+- Prioritizes `.env` variables over YAML.
+- Supports nested keys: `DATABASE__HOST` → `settings.database.host`.
+- Designed to be subclassed for project-specific settings.
+
+### 4. EmailSender
 
 ```python
 from djresttoolkit.mail import EmailSender, EmailContent, EmailTemplate
@@ -161,7 +226,7 @@ Send templated emails.
 EmailSender(email_content: EmailContent | EmailContentDict)
 ```
 
-#### Methods
+#### EmailSender Methods
 
 ```python
 send(to: list[str], exceptions: bool = False) -> bool
@@ -194,7 +259,7 @@ EmailSender(content).send(to=["user@example.com"])
 
 - `text`, `html` — template file paths
 
-### 4. Custom DRF Exception Handler
+### 5. Custom DRF Exception Handler
 
 ```python
 from djresttoolkit.views import exception_handler
@@ -208,12 +273,12 @@ A DRF exception handler that:
 - Adds throttling support (defaults to `AnonRateThrottle`).
 - Returns **429 Too Many Requests** with `retry_after` if throttle limit is exceeded.
 
-#### Parameters
+#### Exception Handler Parameters
 
 - `exc`: Exception object.
 - `context`: DRF context dictionary containing `"request"` and `"view"`.
 
-#### Returns
+#### Returns Type of Exception Handler
 
 - `Response` — DRF Response object (with throttling info if applicable), or `None`.
 
@@ -234,7 +299,7 @@ REST_FRAMEWORK = {
 - Tracks requests in cache and calculates `retry_after`.
 - Cleans expired timestamps automatically.
 
-### 5. Response Time Middleware
+### 6. Response Time Middleware
 
 ```python
 from djresttoolkit.middlewares import ResponseTimeMiddleware
@@ -281,7 +346,7 @@ X-Response-Time: 0.01234 seconds
 INFO: Request processed in 0.01234 seconds
 ```
 
-### 6. Throttle Utilities
+### 7. Throttle Utilities
 
 #### `ThrottleInfoJSONRenderer`
 
