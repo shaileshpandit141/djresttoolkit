@@ -342,11 +342,12 @@ wheels = [
 
 [[package]]
 name = "djresttoolkit"
-version = "0.6.2"
+version = "0.7.0"
 source = { editable = "." }
 dependencies = [
     { name = "faker" },
     { name = "pydantic" },
+    { name = "pydantic-settings" },
 ]
 
 [package.optional-dependencies]
@@ -378,6 +379,7 @@ requires-dist = [
     { name = "faker", specifier = ">=37.5.3" },
     { name = "mypy", marker = "extra == 'dev'" },
     { name = "pydantic", specifier = ">=2.11.7" },
+    { name = "pydantic-settings", specifier = ">=2.10.1" },
     { name = "pytest", marker = "extra == 'dev'" },
     { name = "ruff", marker = "extra == 'dev'" },
 ]

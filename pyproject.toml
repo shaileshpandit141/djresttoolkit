@@ -48,6 +48,7 @@ requires-python = ">=3.13"
 dependencies = [
     "faker>=37.5.3",
     "pydantic>=2.11.7",
+    "pydantic-settings>=2.10.1",
 ]
 
 # CLI scripts entry point configuration
