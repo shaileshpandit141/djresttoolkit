@@ -469,7 +469,6 @@ data = serializer.data
 - Relative file paths are automatically converted to absolute URLs.
 - Can manually specify fields via `file_fields` for non-model serializers.
 
-
 ## 🛠️ Planned Features
 
 - Add more utils
