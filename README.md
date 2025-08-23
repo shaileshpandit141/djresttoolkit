@@ -813,6 +813,59 @@ def my_view(request: HttpRequest):
 https://example.com/api/books/123/?ref=newsletter
 ```
 
+### 14. PageNumberPagination — API Reference
+
+```python
+from djresttoolkit.pagination import PageNumberPagination
+```
+
+#### Description of Page Number Pagination
+
+- Extends **DRF’s `PageNumberPagination`** with a **cleaner metadata structure**.
+- Adds support for **dynamic page size** via the `page-size` query parameter.
+- Returns pagination metadata inside a `"page"` object, separate from `"results"`.
+
+#### Features of Page Number Pagination
+
+- Clients can control items per page using `?page-size=`.
+- Structured pagination metadata:
+
+  - `current` → current page number
+  - `total` → total number of pages
+  - `size` → number of items per page
+  - `total_items` → total number of items across all pages
+  - `next` → next page URL
+  - `previous` → previous page URL
+- Standardized API response format.
+
+### Attributes of Page Number Pagination
+
+- `page_size_query_param: str` → Query parameter name (`"page-size"`).
+
+### Page Number Pagination Methods
+
+- `get_paginated_response(data: Any) -> Response`
+  Returns a JSON response with both pagination metadata and results.
+
+### Example Response of Page Number Pagination
+
+```json
+{
+  "page": {
+    "current": 1,
+    "total": 10,
+    "size": 20,
+    "total_items": 200,
+    "next": "http://api.example.com/items/?page=2&page-size=20",
+    "previous": null
+  },
+  "results": [
+    { "id": 1, "name": "Item 1" },
+    { "id": 2, "name": "Item 2" }
+  ]
+}
+```
+
 ## 🛠️ Planned Features
 
 - Add more utils
