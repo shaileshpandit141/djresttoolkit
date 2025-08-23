@@ -866,6 +866,73 @@ from djresttoolkit.pagination import PageNumberPagination
 }
 ```
 
+### 15. PaginatedDataBuilder — API Reference
+
+```python
+from djresttoolkit.pagination import PaginatedDataBuilder
+```
+
+---
+
+#### Description of Paginated Data Builder
+
+- A **builder utility** to paginate and serialize Django QuerySets using DRF.
+- Uses the custom **`PageNumberPagination`** class for consistent pagination responses.
+- Designed for reusability inside DRF views and APIs.
+
+#### Features of Paginated Data Builder
+
+- Integrates with **DRF serializers**.
+- Handles **invalid pages** gracefully by raising `NotFound`.
+- Returns both:
+  - `"page"` → pagination metadata
+  - `"results"` → serialized data.
+- Provides **structured pagination response format**.
+
+---
+
+#### Initialization of Paginated Data Builder
+
+```python
+builder = PaginatedDataBuilder(
+    request=request,
+    serializer_class=MySerializer,
+    queryset=MyModel.objects.all()
+)
+```
+
+- `request: Request` → DRF request object.
+- `serializer_class: type[BaseSerializer]` → DRF serializer class for the model.
+- `queryset: QuerySet` → Django queryset to paginate.
+
+### Paginated Data Builder Methods
+
+- `get_paginated_data() -> dict[str, Any]`
+
+  - Applies pagination to the queryset.
+  - Serializes the paginated results.
+  - Returns a dictionary with `"page"` and `"results"`.
+  - Raises `NotFound` if no page data is found.
+
+### Example Response of Paginated Data Builder
+
+```json
+{
+  "page": {
+    "current": 2,
+    "total": 5,
+    "size": 20,
+    "total_items": 100,
+    "next": "http://api.example.com/items/?page=3&page-size=20",
+    "previous": "http://api.example.com/items/?page=1&page-size=20"
+  },
+  "results": [
+    { "id": 21, "name": "Item 21" },
+    { "id": 22, "name": "Item 22" }
+  ]
+}
+```
+
 ## 🛠️ Planned Features
 
 - Add more utils
