@@ -162,11 +162,18 @@ Supports **nested configuration** using double underscores (`__`) in environment
 
 #### Class Attributes
 
-| Attribute      | Type                 | Default         | Description                                                        |
-| -------------- | -------------------- | --------------- | ------------------------------------------------------------------ |
-| `env_file`     | `str`                | `.env`          | Environment variable file path.                                    |
-| `yaml_file`    | `str`                | `.environ.yaml` | YAML configuration file path.                                      |
-| `model_config` | `SettingsConfigDict` | —               | Pydantic settings configuration (file encoding, nested delimiter). |
+- Attributes
+  - `env_file`
+    - Type: `str`
+    - Default: `.env`
+    - Description: Environment variable file path.
+  - `yaml_file`
+    - Type: `str`
+    - Default: `.environ.yaml`
+    - Description: YAML configuration file path.
+  - `model_config`
+    - Type: `SettingsConfigDict`
+    - Description: Pydantic settings configuration (file encoding, nested delimiter).
 
 #### Methods
 
@@ -401,6 +408,67 @@ ThrottleInspector(
 
 - `attach_headers(response: Response, throttle_info: dict | None)`
   Attaches throttle data to HTTP headers.
+
+### 8. AbsoluteUrlFileMixin — API Reference
+
+```python
+from djresttoolkit.serializers.mixins import AbsoluteUrlFileMixin
+```
+
+### `AbsoluteUrlFileMixin`
+
+A **serializer mixin** that converts **FileField** and **ImageField** URLs to **absolute URLs**, ensuring compatibility with cloud storage backends.
+
+---
+
+### Attributes
+
+- `file_fields`
+- type: `list[str] | None`
+- default: `None`
+- description: Manual list of file field names for non-model serializers.
+
+### Absolute Url File Mixin Methods
+
+#### `to_representation(self, instance: Any) -> dict[str, Any]`
+
+- Overrides default serializer `to_representation`.
+- Enhances all file-related fields in the serialized output to **absolute URLs**.
+
+#### `enhance_file_fields(self, instance: Any, representation: dict[str, Any], request: Any) -> dict[str, Any]`
+
+- Core logic to process each file field.
+- Converts relative URLs to absolute URLs using `request.build_absolute_uri()`.
+- Supports model serializers or manual `file_fields`.
+- Logs warnings if request context is missing or file is not found.
+
+#### Exceptions
+
+- `MissingRequestContext`: Raised if the request object is missing in serializer context and `DEBUG=True`.
+
+### Absolute Url File Mixin Example
+
+```python
+from rest_framework import serializers
+from djresttoolkit.serializers.mixins import AbsoluteUrlFileMixin
+from myapp.models import Document
+
+class DocumentSerializer(AbsoluteUrlFileMixin, serializers.ModelSerializer):
+    class Meta:
+        model = Document
+        fields = ["id", "title", "file"]
+
+# Output will convert `file` field to an absolute URL
+serializer = DocumentSerializer(instance, context={"request": request})
+data = serializer.data
+```
+
+#### Notes
+
+- Works with both Django model serializers and custom serializers.
+- Relative file paths are automatically converted to absolute URLs.
+- Can manually specify fields via `file_fields` for non-model serializers.
+
 
 ## 🛠️ Planned Features
 
