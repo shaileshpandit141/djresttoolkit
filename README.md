@@ -695,6 +695,60 @@ urlpatterns = [
 - Useful for frontend forms or API consumers that need selectable options.
 - Integrates seamlessly with `ModelChoiceFieldMixin` from `djresttoolkit`.
 
+### 12. RetrieveObjectMixin — API Reference
+
+```python
+from djresttoolkit.views.mixins import RetrieveObjectMixin
+```
+
+#### `RetrieveObjectMixin[T: Model]`
+
+A **generic mixin** to retrieve a single Django model instance by filters.
+
+#### Class Attributes of Retrieve Object Mixin
+
+- `queryset: QuerySet[T] | None` — The queryset used to retrieve objects. **Must be set.**
+
+#### Raises of Retrieve Object Mixin
+
+- `QuerysetNotDefinedError` — If `queryset` is not set in the class.
+
+#### Retrieve Object Mixin Methods
+
+- `get_object(**filters: Any) -> T | None`
+
+Retrieve a single model object using the provided filter criteria.
+
+- **Parameters:**
+  - `**filters` — Keyword arguments to filter the queryset (e.g., `id=1`, `slug="abc"`).
+
+- **Returns:**
+  - Model instance matching the filters, or `None` if no match is found.
+
+#### Example of Retrieve Object Mixin
+
+```python
+from rest_framework.views import APIView
+from django.http import JsonResponse
+from myapp.models import Book
+from djresttoolkit.mixins import RetrieveObjectMixin
+
+class BookDetailView(RetrieveObjectMixin[Book], APIView):
+    queryset = Book.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        book = self.get_object(id=kwargs["id"])
+        if book:
+            return JsonResponse({"title": book.title, "author": book.author})
+        return JsonResponse({"detail": "Not found"}, status=404)
+```
+
+#### Features of Retrieve Object Mixin
+
+- Simplifies object retrieval in class-based views or DRF views.
+- Returns `None` instead of raising `DoesNotExist`, making error handling easier.
+- Works with any Django model and queryset.
+
 ## 🛠️ Planned Features
 
 - Add more utils
