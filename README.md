@@ -6,13 +6,53 @@
 
 djresttoolkit is a collection of utilities and helpers for Django and Django REST Framework (DRF) that simplify common development tasks such as API handling, authentication, and email sending and much more.
 
-## ✨ Features
+## 📖 Feature Index (djresttoolkit)
 
-- Django REST Framework helpers (serializers, views, pagination, etc.)
-- Django utilities (e.g., email sending, model mixins)
-- Ready-to-use shortcuts to speed up API development
-- Lightweight, no unnecessary dependencies
-- Type Safe - written with modern Python type hints.
+- **DB Seed Command (`dbseed`)**
+  Seed your database with fake data using Pydantic models powered by **Faker**. Supports relationships, transactions, and a `manage.py dbseed` command.
+
+- **DB Flush Command (`dbflush`)**
+  Management command to flush all models or a specific model, resetting auto-increment IDs safely with transaction support.
+
+- **EnvBaseSettings**
+  Typed settings loader using **YAML + .env**, supports nested keys and overrides. Great for structured configuration management.
+
+- **EmailSender**
+  Custom class to send templated emails (`text` and `html`) with context. Supports error handling and logging.
+
+- **Custom DRF Exception Handler**
+  Centralized error handler for DRF that extends default behavior and adds throttle support (`429 Too Many Requests` with retry info).
+
+- **Response Time Middleware**
+  Middleware to measure, log, and inject `X-Response-Time` headers into every response.
+
+- **Throttle**
+  - `ThrottleInfoJSONRenderer`: Automatically adds throttle headers to responses.
+  - `ThrottleInspector`: Inspect view/request throttling and attach structured headers.
+
+- **AbsoluteUrlFileMixin**
+  DRF serializer mixin that converts `FileField` / `ImageField` URLs to **absolute URLs** automatically.
+
+- **BulkCreateMixin**
+  Serializer mixin that enables **bulk creation** of objects and syncs field error messages with model fields.
+
+- **ModelChoiceFieldMixin**
+  Retrieve choice fields (`TextChoices`, etc.) from Django models as structured dictionaries for API responses.
+
+- **ChoiceFieldsAPIView**
+  Generic API view that exposes model `choices` in a REST-friendly JSON format.
+
+- **RetrieveObjectMixin**
+  Lightweight mixin to fetch a single object from a queryset with filters, raising a custom error if `queryset` is not defined.
+
+- **build\_absolute\_uri**
+  Helper to build full absolute URLs for named routes with optional query params. Works with Django + DRF requests.
+
+- **PageNumberPagination**
+  Custom paginator with a structured `"page"` metadata block and support for dynamic `page-size` query param.
+
+- **PaginatedDataBuilder**
+  Builder that combines `PageNumberPagination` + serializers to return standardized paginated responses with `"page"` + `"results"`.
 
 ## 📦 Installation
 
@@ -30,7 +70,7 @@ djresttoolkit is a collection of utilities and helpers for Django and Django RES
 
 ## 📚 All API Reference
 
-### 1. DB Seed Utilities — API Reference
+### 1. DB Seed Command — API Reference
 
 #### `Generator`
 
@@ -353,7 +393,7 @@ X-Response-Time: 0.01234 seconds
 INFO: Request processed in 0.01234 seconds
 ```
 
-### 7. Throttle Utilities — API Reference
+### 7. Throttle — API Reference
 
 #### `ThrottleInfoJSONRenderer`
 
