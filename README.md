@@ -564,7 +564,7 @@ A **Django model mixin** to retrieve **choice fields** from a model, designed to
 
 #### Model Choice Field Mixin Methods
 
-`get_choices() -> dict[str, dict[str, str]]`
+- `get_choices() -> dict[str, dict[str, str]]`
 
 Retrieve the choice fields from the model as a dictionary.
 
@@ -622,6 +622,78 @@ print(choices)
 - Safely validates that fields exist and have valid choices.
 - Returns a ready-to-use dictionary mapping values to labels.
 - Ideal for DRF serializers, forms, and admin customization.
+
+Here’s a concise **docs entry** for your `ChoiceFieldsAPIView` suitable for `djresttoolkit` documentation:
+
+---
+
+### 11. ChoiceFieldsAPIView — API Reference
+
+```python
+from djresttoolkit.views import ChoiceFieldsAPIView
+```
+
+#### `ChoiceFieldsAPIView`
+
+A **generic DRF API view** to return all choices for specified model fields.
+
+#### Class Attributes of Choice Fields APIView
+
+- `model_class: type[Model] | None` — The Django model to inspect. **Must be set.**
+- `choice_fields: list[str] | None` — List of fields on the model with choices. **Must be set.**
+
+---
+
+#### Choice Fields APIView Methods
+
+- `get(request: Request) -> Response`
+
+Fetches the choices for the configured model fields.
+
+- **Returns:**
+  - `200 OK` — JSON object containing all choices:
+
+    ```json
+    {
+        "choices": {
+            "status": {"draft": "Draft", "published": "Published"},
+            "category": {"a": "Category A", "b": "Category B"}
+        }
+    }
+    ```
+
+  - `400 Bad Request` — If any error occurs while retrieving choices.
+
+- **Raises:**
+  - `AttributeDoesNotExist` — If `model_class` or `choice_fields` is not set.
+
+---
+
+### Example of Choice Fields APIView
+
+```python
+from django.urls import path
+from djresttoolkit.views import ChoiceFieldsAPIView
+from myapp.models import Product
+
+class ProductChoiceAPI(ChoiceFieldsAPIView):
+    model_class = Product
+    choice_fields = ["status", "category"]
+
+urlpatterns = [
+    path(
+      "api/v1/product-choices/",
+      ProductChoiceAPI.as_view(),
+      name="product-choices"
+    ),
+]
+```
+
+#### Choice Fields APIView Features
+
+- Dynamically returns all choices for selected fields in a model.
+- Useful for frontend forms or API consumers that need selectable options.
+- Integrates seamlessly with `ModelChoiceFieldMixin` from `djresttoolkit`.
 
 ## 🛠️ Planned Features
 
