@@ -749,6 +749,70 @@ class BookDetailView(RetrieveObjectMixin[Book], APIView):
 - Returns `None` instead of raising `DoesNotExist`, making error handling easier.
 - Works with any Django model and queryset.
 
+### 13. build_absolute_uri — API Reference
+
+```python
+from djresttoolkit.urls import build_absolute_uri
+```
+
+#### build absolute uri Description
+
+- Builds a **fully qualified absolute URL** for a Django or DRF view.
+- Optionally includes **query parameters**.
+- Works with both **Django `HttpRequest`** and **DRF `Request`** objects.
+- Uses Django's `reverse()` to dynamically resolve URL names.
+
+#### build absolute uri Function Signature
+
+```python
+def build_absolute_uri(
+    request: HttpRequest | Request,
+    url_name: str,
+    query_params: dict[str, Any] | None = None,
+    *args: Any,
+    **kwargs: Any,
+) -> str:
+    ...
+```
+
+---
+
+#### build absolute uri Parameters
+
+- `request` (`HttpRequest | Request`): The incoming Django or DRF request object.
+- `url_name` (`str`): Name of the URL pattern to reverse.
+- `query_params` (`dict[str, Any] | None`): Optional dictionary of query parameters to append to the URL.
+- `*args` (`Any`): Positional arguments for the URL reversal.
+- `**kwargs` (`Any`): Keyword arguments for the URL reversal.
+
+---
+
+### build absolute uri Returns
+
+- `str`: Absolute URI of the view including optional query parameters.
+
+### Example of build absolute uri
+
+```python
+from django.http import HttpRequest
+from djresttoolkit.utils import build_absolute_uri
+
+def my_view(request: HttpRequest):
+    absolute_url = build_absolute_uri(
+        request,
+        url_name="book-detail",
+        query_params={"ref": "newsletter"},
+        pk=123
+    )
+    return HttpResponse(f"URL: {absolute_url}")
+```
+
+**Output Example:**
+
+```url
+https://example.com/api/books/123/?ref=newsletter
+```
+
 ## 🛠️ Planned Features
 
 - Add more utils
