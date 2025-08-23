@@ -30,7 +30,7 @@ djresttoolkit is a collection of utilities and helpers for Django and Django RES
 
 ## 📚 All API Reference
 
-### 1. DB Seed Utilities
+### 1. DB Seed Utilities — API Reference
 
 #### `Generator`
 
@@ -89,7 +89,7 @@ Here’s a **concise API reference** for your database flush management command 
 
 ---
 
-### 2. DB Flush Command
+### 2. DB Flush Command — API Reference
 
 ```python
 from djresttoolkit.management.commands import flush
@@ -145,7 +145,7 @@ or
 Flushed 120 records from all models and reset IDs.
 ```
 
-### 3. EnvBaseSettings
+### 3. EnvBaseSettings — API Reference
 
 ```python
 from djresttoolkit.envconfig import EnvBaseSettings
@@ -200,7 +200,7 @@ Loads configuration from **YAML first**, then overrides with **environment varia
 ```python
 from djresttoolkit.envconfig import EnvBaseSettings
 
-class EnvSettings(EnvBaseSettings):
+class EnvSettings(EnvBaseSettings["EnvSettings"]):
     debug: bool = False
     database_url: str
 
@@ -217,7 +217,7 @@ print(settings.database_url)
 - Supports nested keys: `DATABASE__HOST` → `settings.database.host`.
 - Designed to be subclassed for project-specific settings.
 
-### 4. EmailSender
+### 4. EmailSender — API Reference
 
 ```python
 from djresttoolkit.mail import EmailSender, EmailContent, EmailTemplate
@@ -266,7 +266,7 @@ EmailSender(content).send(to=["user@example.com"])
 
 - `text`, `html` — template file paths
 
-### 5. Custom DRF Exception Handler
+### 5. Custom DRF Exception Handler — API Reference
 
 ```python
 from djresttoolkit.views import exception_handler
@@ -306,7 +306,7 @@ REST_FRAMEWORK = {
 - Tracks requests in cache and calculates `retry_after`.
 - Cleans expired timestamps automatically.
 
-### 6. Response Time Middleware
+### 6. Response Time Middleware — API Reference
 
 ```python
 from djresttoolkit.middlewares import ResponseTimeMiddleware
@@ -353,7 +353,7 @@ X-Response-Time: 0.01234 seconds
 INFO: Request processed in 0.01234 seconds
 ```
 
-### 7. Throttle Utilities
+### 7. Throttle Utilities — API Reference
 
 #### `ThrottleInfoJSONRenderer`
 
@@ -468,6 +468,84 @@ data = serializer.data
 - Works with both Django model serializers and custom serializers.
 - Relative file paths are automatically converted to absolute URLs.
 - Can manually specify fields via `file_fields` for non-model serializers.
+
+### 9. BulkCreateMixin — API Reference
+
+```python
+from djresttoolkit.serializers.mixins import BulkCreateMixin
+```
+
+#### `BulkCreateMixin`
+
+A **DRF serializer mixin** that adds support for:
+
+- **Single instance creation** with extra context fields
+- **Bulk creation** from a list of validated data dictionaries
+- **Updating serializer field error messages** with model-specific messages
+
+#### Bulk Create Mixin Notes
+
+- `bulk_create()` does **not trigger model signals** or call `.save()` on instances.
+- `Meta.model` **must** be defined in the serializer.
+
+#### Bulk Create Mixin Methods
+
+#### `create(self, validated_data: dict[str, Any] | list[dict[str, Any]]) -> Model | list[Model]`
+
+- Creates single or multiple model instances.
+- **Parameters:**
+  - `validated_data`: dict for single instance or list of dicts for bulk creation.
+  
+- **Returns:**
+  - Single model instance or list of instances.
+  
+- **Raises:**
+  - `AttributeError` if `Meta.model` is not defined.
+  - `NotImplementedError` if used with a serializer that does not implement `create()`.
+
+#### `get_fields(self) -> dict[str, SerializerField]`
+
+- Extends DRF serializer `get_fields()` to update **error messages** using model field definitions.
+- **Returns:**
+  - Dictionary of serializer fields.
+
+- **Warning:**
+  - Logs a warning if a serializer field is not present on the model.
+
+### Bulk Create Mixin Example
+
+```python
+from rest_framework import serializers
+from djresttoolkit.serializers.mixins import BulkCreateMixin
+from myapp.models import Product
+
+class ProductSerializer(BulkCreateMixin, serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ["id", "name", "price"]
+
+# Single creation
+serializer = ProductSerializer(data={"name": "Item1", "price": 10})
+serializer.is_valid(raise_exception=True)
+product = serializer.save()
+
+# Bulk creation
+serializer = ProductSerializer(
+    data=[
+        {"name": "Item2", "price": 20},
+        {"name": "Item3", "price": 30},
+    ],
+    many=True
+)
+serializer.is_valid(raise_exception=True)
+products = serializer.save()
+```
+
+#### Bulk Create Mixin Features
+
+- Works seamlessly with DRF `ModelSerializer`.
+- Automatically updates field error messages based on Django model definitions.
+- Bulk creation is optimized using `model.objects.bulk_create()` for efficiency.
 
 ## 🛠️ Planned Features
 
