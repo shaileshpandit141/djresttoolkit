@@ -54,6 +54,9 @@ djresttoolkit is a collection of utilities and helpers for Django and Django RES
 - **PaginatedDataBuilder**
   Builder that combines `PageNumberPagination` + serializers to return standardized paginated responses with `"page"` + `"results"`.
 
+- **Caching Mixins**
+  This module provides a set of DRF mixins to handle caching for `list`, `retrieve`, and `custom actions` with automatic invalidation on create, update, and destroy.
+
 ## 📦 Installation
 
 - **By using uv:**
@@ -254,7 +257,7 @@ print(settings.database_url)
 #### Features
 
 - Prioritizes `.env` variables over YAML.
-- Supports nested keys: `DATABASE__HOST` → `settings.database.host`.
+- Supports nested keys: `DATABASE__HOST`:- `settings.database.host`.
 - Designed to be subclassed for project-specific settings.
 
 ### 4. EmailSender — API Reference
@@ -870,17 +873,17 @@ from djresttoolkit.pagination import PageNumberPagination
 - Clients can control items per page using `?page-size=`.
 - Structured pagination metadata:
 
-  - `current` → current page number
-  - `total` → total number of pages
-  - `size` → number of items per page
-  - `total_items` → total number of items across all pages
-  - `next` → next page URL
-  - `previous` → previous page URL
+  - `current`:- current page number
+  - `total`:- total number of pages
+  - `size`:- number of items per page
+  - `total_items`:- total number of items across all pages
+  - `next`:- next page URL
+  - `previous`:- previous page URL
 - Standardized API response format.
 
 ### Attributes of Page Number Pagination
 
-- `page_size_query_param: str` → Query parameter name (`"page-size"`).
+- `page_size_query_param: str`:- Query parameter name (`"page-size"`).
 
 ### Page Number Pagination Methods
 
@@ -925,8 +928,8 @@ from djresttoolkit.pagination import PaginatedDataBuilder
 - Integrates with **DRF serializers**.
 - Handles **invalid pages** gracefully by raising `NotFound`.
 - Returns both:
-  - `"page"` → pagination metadata
-  - `"results"` → serialized data.
+  - `"page"`:- pagination metadata
+  - `"results"`:- serialized data.
 - Provides **structured pagination response format**.
 
 ---
@@ -941,9 +944,9 @@ builder = PaginatedDataBuilder(
 )
 ```
 
-- `request: Request` → DRF request object.
-- `serializer_class: type[BaseSerializer]` → DRF serializer class for the model.
-- `queryset: QuerySet` → Django queryset to paginate.
+- `request: Request`:- DRF request object.
+- `serializer_class: type[BaseSerializer]`:- DRF serializer class for the model.
+- `queryset: QuerySet`:- Django queryset to paginate.
 
 ### Paginated Data Builder Methods
 
@@ -972,6 +975,80 @@ builder = PaginatedDataBuilder(
   ]
 }
 ```
+
+### 16. Caching Mixins — API Reference
+
+This module provides a set of DRF mixins to handle **caching for list, retrieve, and custom actions** with automatic invalidation on create, update, and destroy.
+
+#### 1️ `CacheKeyMixin`
+
+- **Purpose**: Generate unique cache keys for DRF viewset actions.
+- **Attributes**:
+  - `cache_timeout: int = 300`:- default cache duration in seconds.
+- **Methods**:
+  - `get_cache_timeout()`:- returns the cache timeout.
+  - `get_cache_key(action_type, pk=None, action_name=None)`:- returns a cache key string based on action type:**
+    - `list` or `custom-list`:- hash of query parameters.
+    - `retrieve` or `custom-detail`:- uses primary key (`pk`).
+
+#### 2️ `CacheOpsMixin`
+
+- **Purpose**: Get, set, and invalidate cache.
+- **Methods**:
+  - `get_or_set_cache(cache_key, data_fn, timeout=None)`:- fetch from cache or compute and set.
+  - `invalidate_cache(pk=None, custom_actions=None)`:- delete cached items:
+    - Deletes retrieve/detail caches for a `pk`.
+    - Deletes list caches (supports `delete_pattern` if available).
+
+#### 3️ `CacheActionMixin`
+
+- **Purpose**: Decorator for caching custom DRF `@action` methods.
+- **Methods**:
+  - `cache_action(detail=False, action_name=None)`:- returns a decorator that caches action results automatically.
+  - Works for:
+    - `detail=False`:- custom-list action cache.
+    - `detail=True`:- custom-detail action cache.
+
+#### 4️ `CacheListRetrieveMixin`
+
+- **Purpose**: Caches DRF `list()` and `retrieve()` responses.
+- **Methods**:
+  - `list(request, *args, **kwargs)`:- caches list responses.
+  - `retrieve(request, *args, **kwargs)`:- caches detail responses.
+  - `_get_list_data(request)`:- internal method to fetch paginated list data.
+  - `_get_detail_data()`:- internal method to fetch a single object.
+
+#### 5️ `CacheInvalidateMixin`
+
+- **Purpose**: Automatically invalidates caches on write operations.
+- **Methods**:
+  - `create(request, *args, **kwargs)`:- invalidates list caches.
+  - `update(request, *args, **kwargs)`:- invalidates detail caches for `pk`.
+  - `destroy(request, *args, **kwargs)`:- invalidates detail caches for `pk`.
+
+#### Example of Caching Mixins
+
+```python
+from rest_framework.viewsets import ModelViewSet
+from myapp.models import Book
+from myapp.serializers import BookSerializer
+from djresttoolkit.cache_mixins import CacheInvalidateMixin, CacheActionMixin
+
+class BookViewSet(CacheInvalidateMixin, ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    basename = "book"
+
+    @CacheActionMixin.cache_action(detail=False)
+    def popular(self, request):
+        data = Book.objects.filter(is_popular=True)
+        serializer = self.get_serializer(data, many=True)
+        return Response(serializer.data)
+```
+
+- Automatically caches `list`, `retrieve`, and `popular` actions.
+- Invalidates caches when books are created, updated, or deleted.
+- Supports custom cache keys per action.
 
 ## 🛠️ Planned Features
 
