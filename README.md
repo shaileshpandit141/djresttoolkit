@@ -547,6 +547,82 @@ products = serializer.save()
 - Automatically updates field error messages based on Django model definitions.
 - Bulk creation is optimized using `model.objects.bulk_create()` for efficiency.
 
+### 10. ModelChoiceFieldMixin — API Reference
+
+```python
+from djresttoolkit.models.mixins import ModelChoiceFieldMixin
+```
+
+### `ModelChoiceFieldMixin`
+
+A **Django model mixin** to retrieve **choice fields** from a model, designed to work seamlessly with Django's `TextChoices`.
+
+#### Class Attributes in Model Choice Field Mixin
+
+- `model: type[Model] | None` — The Django model class to inspect. **Must be set.**
+- `choice_fields: list[str] | None` — List of model field names that contain choices. **Must be set.**
+
+#### Model Choice Field Mixin Methods
+
+`get_choices() -> dict[str, dict[str, str]]`
+
+Retrieve the choice fields from the model as a dictionary.
+
+- **Returns:**
+
+  ```python
+  {
+      "field_name": {
+          "choice_value": "Choice Label",
+          ...
+      },
+      ...
+  }
+  ```
+
+- **Raises:**
+
+  - `AttributeDoesNotExist` — If `model` or `choice_fields` is not set.
+  - `ChoiceFieldNotFound` — If a field does not exist, has no choices, or has invalid choice format.
+
+---
+
+### Model Choice Field Mixin Example
+
+```python
+from django.db import models
+from djresttoolkit.serializers.mixins import ModelChoiceFieldMixin
+
+class Product(models.Model):
+    class Status(models.TextChoices):
+        DRAFT = "draft", "Draft"
+        PUBLISHED = "published", "Published"
+
+    status = models.CharField(max_length=20, choices=Status.choices)
+    category = models.CharField(max_length=50, choices=[
+      ("a", "Category A"),
+      ("b", "Category B"),
+    ])
+
+class ProductChoiceMixin(ModelChoiceFieldMixin):
+    model = Product
+    choice_fields = ["status", "category"]
+
+choices = ProductChoiceMixin.get_choices()
+print(choices)
+# Output:
+# {
+#   "status": {"draft": "Draft", "published": "Published"},
+#   "category": {"a": "Category A", "b": "Category B"}
+# }
+```
+
+#### Features of Model Choice Field Mixin
+
+- Safely validates that fields exist and have valid choices.
+- Returns a ready-to-use dictionary mapping values to labels.
+- Ideal for DRF serializers, forms, and admin customization.
+
 ## 🛠️ Planned Features
 
 - Add more utils
