@@ -6,7 +6,7 @@ import yaml
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class EnvBaseSettings(BaseSettings):
+class EnvBaseSettings[T: "EnvBaseSettings"](BaseSettings):
     """ "
     EnvBaseSettings is a base settings class for managing application configuration
     using both YAML files and environment variables.
@@ -60,12 +60,12 @@ class EnvBaseSettings(BaseSettings):
 
     @classmethod
     def load(
-        cls,
+        cls: type[T],
         *,
         env_file: str | None = None,
         ymal_file: str | None = None,
         warning: bool = True,
-    ) -> "EnvBaseSettings":
+    ) -> T:
         """Load from YAML first, then override with .env."""
         if env_file:
             cls.env_file = env_file
