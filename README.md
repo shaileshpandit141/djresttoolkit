@@ -1032,7 +1032,7 @@ This module provides a set of DRF mixins to handle **caching for list, retrieve,
 from rest_framework.viewsets import ModelViewSet
 from myapp.models import Book
 from myapp.serializers import BookSerializer
-from djresttoolkit.cache_mixins import CacheInvalidateMixin, CacheActionMixin
+from djresttoolkit.cache.mixins import CacheInvalidateMixin, CacheActionMixin
 
 class BookViewSet(CacheInvalidateMixin, ModelViewSet):
     queryset = Book.objects.all()
