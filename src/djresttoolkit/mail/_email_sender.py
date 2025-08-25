@@ -57,9 +57,9 @@ class EmailSender:
     @property
     def email_content(self) -> EmailContentDict:
         """Convert pydantic mode to python dict."""
-        if isinstance(self.email_content, EmailContent):
-            return cast(EmailContentDict, self.email_content.model_dump())
-        return self.email_content
+        if isinstance(self._email_content, EmailContent):
+            return cast(EmailContentDict, self._email_content.model_dump())
+        return self._email_content
 
     def send(
         self,
