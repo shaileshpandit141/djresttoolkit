@@ -80,7 +80,10 @@ class EmailSender:
                 to=unique_recipients,
             )
             email.attach_alternative(
-                content=self.email_content["template"]["html"],
+                content=render_to_string(
+                    self.email_content["template"]["html"],
+                    self.email_content["context"],
+                ),
                 mimetype="text/html",
             )
             email.send()
