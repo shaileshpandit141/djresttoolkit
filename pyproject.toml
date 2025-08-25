@@ -4,7 +4,7 @@
 
 [project]
 name = "djresttoolkit"
-version = "0.17.4"
+version = "0.17.5"
 description = "A collection of Django and DRF utilities to simplify API development."
 readme = { file = "README.md", content-type = "text/markdown" }
 license = { file = "LICENSE" }
