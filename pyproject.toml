@@ -4,7 +4,7 @@
 
 [project]
 name = "djresttoolkit"
-version = "0.17.5"
+version = "1.0.0"
 description = "A collection of Django and DRF utilities to simplify API development."
 readme = { file = "README.md", content-type = "text/markdown" }
 license = { file = "LICENSE" }
@@ -48,8 +48,6 @@ requires-python = ">=3.13"
 dependencies = [
     "faker>=37.5.3",
     "pydantic>=2.11.7",
-    "pydantic-settings>=2.10.1",
-    "pyyaml>=6.0.2",
 ]
 
 # CLI scripts entry point configuration
