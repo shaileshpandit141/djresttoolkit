@@ -14,8 +14,8 @@ djresttoolkit is a collection of utilities and helpers for Django and Django RES
 - **DB Flush Command (`dbflush`)**
   Management command to flush all models or a specific model, resetting auto-increment IDs safely with transaction support.
 
-- **EnvBaseSettings**
-  Typed settings loader using **YAML + .env**, supports nested keys and overrides. Great for structured configuration management.
+- **BaseEnvConfig**
+  Singleton environment loader that reads and parses environment variables.
 
 - **EmailSender**
   Custom class to send templated emails (`text` and `html`) with context. Supports error handling and logging.
@@ -128,10 +128,6 @@ python manage.py dbseed --count 10
 python manage.py dbseed --model User --seed 42
 ```
 
-Here’s a **concise API reference** for your database flush management command for `djresttoolkit`:
-
----
-
 ### 2. DB Flush Command — API Reference
 
 ```python
@@ -188,77 +184,54 @@ or
 Flushed 120 records from all models and reset IDs.
 ```
 
-### 3. EnvBaseSettings — API Reference
+###  3. BaseEnvConfig — API Reference
 
 ```python
-from djresttoolkit.envconfig import EnvBaseSettings
+from djresttoolkit.envconfig import BaseEnvConfig
 ```
 
-#### `EnvBaseSettings`
+#### `BaseEnvConfig`
 
-A **base settings class** for managing application configuration using:
+Singleton environment loader that reads and parses environment variables with support for booleans, numbers, and JSON.
 
-- YAML files (default `.environ.yaml`)
-- Environment variables (default `.env`)
+> ⚠️ **Note:** Note: If you are using a .env file, load it first with python-dotenv:
+>
+> ```python
+> from dotenv import load_dotenv
+> load_dotenv()
+> ```
 
-Supports **nested configuration** using double underscores (`__`) in environment variable names.
+or
+>
+> ```python
+> from djresttoolkit.envconfig import load_dotenv
+> load_dotenv()
+> ```
 
-#### Class Attributes
-
-- Attributes
-  - `env_file`
-    - Type: `str`
-    - Default: `.env`
-    - Description: Environment variable file path.
-  - `yaml_file`
-    - Type: `str`
-    - Default: `.environ.yaml`
-    - Description: YAML configuration file path.
-  - `model_config`
-    - Type: `SettingsConfigDict`
-    - Description: Pydantic settings configuration (file encoding, nested delimiter).
-
-#### Methods
-
-#### `load(cls, *, env_file: str | None = None, ymal_file: str | None = None, warning: bool = True) -> EnvBaseSettings`
-
-Loads configuration from **YAML first**, then overrides with **environment variables**.
-
-#### Parameters
-
-- `env_file` — Optional custom `.env` file path.
-- `ymal_file` — Optional custom YAML file path.
-- `warning` — Emit a warning if YAML file is missing (default `True`).
-
-#### Returns
-
-- Instance of `EnvBaseSettings` (or subclass) with loaded configuration.
-
-#### Raises
-
-- `UserWarning` if YAML file not found and `warning=True`.
-
-### Usage Example
+#### Usage Example
 
 ```python
-from djresttoolkit.envconfig import EnvBaseSettings
+from djresttoolkit.envconfig import load_dotenv, BaseEnvConfig
 
-class EnvSettings(EnvBaseSettings["EnvSettings"]):
-    debug: bool = False
-    database_url: str
+load_dotenv()
 
-# Load settings
-settings = EnvSettings.load(warning=False)
+class EnvConfig(BaseEnvConfig):
+    DEBUG: bool = False
+    DATABASE_URL: str
 
-print(settings.debug)
-print(settings.database_url)
+config = EnvConfig()
+print(config.DEBUG)
+print(config.DATABASE_URL)
+
+config.reload()
 ```
 
 #### Features
 
-- Prioritizes `.env` variables over YAML.
-- Supports nested keys: `DATABASE__HOST`:- `settings.database.host`.
-- Designed to be subclassed for project-specific settings.
+- Thread-safe singleton.
+- Automatic type parsing for environment variables.
+- Supports default values and runtime reloading.
+- Designed for subclassing with project-specific settings.
 
 ### 4. EmailSender — API Reference
 
