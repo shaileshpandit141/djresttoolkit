@@ -1,8 +1,6 @@
 import sys
 from pathlib import Path
 
-from env_config import env_settings
-
 # Configuration Settings File for the django backend
 # --------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -14,7 +12,7 @@ sys.path.insert(0, str(SRC_DIR))
 
 # Security Configuration Settings
 # -------------------------------
-SECRET_KEY = env_settings.secret_key
+SECRET_KEY = "asdkjasdjgasdgjioarejalk54884a651asdgklnaskdg"
 
 # DEBUG Configuration Settings
 # ----------------------------
@@ -22,11 +20,11 @@ DEBUG = True
 
 # Allowed Host Configuration Settings
 # -----------------------------------
-ALLOWED_HOSTS = env_settings.allowed_hosts
+ALLOWED_HOSTS = ["*"]
 
 # Configure CORS Settings
 # -----------------------
-CORS_ALLOWED_ORIGINS = env_settings.cors_allowed_origins
+# CORS_ALLOWED_ORIGINS = []
 
 # Login Redirect URL Configuration Setting
 # ----------------------------------------
@@ -200,29 +198,13 @@ REST_FRAMEWORK = {
 # -------------------------------------
 AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
 
-# EMAIL Configuration Settings
-# ----------------------------
-EMAIL_BACKEND = env_settings.email.backend  # type: ignore[]
-EMAIL_HOST = env_settings.email.host
-EMAIL_PORT = env_settings.email.port
-EMAIL_USE_TLS = env_settings.email.use_tls
-EMAIL_USE_SSL = env_settings.email.use_ssl
-EMAIL_HOST_USER = env_settings.email.host_user
-EMAIL_HOST_PASSWORD = env_settings.email.host_password
-DEFAULT_FROM_EMAIL = env_settings.email.default_from_email
-
-# Google OAuth2 Configuration Settings
-# ------------------------------------
-GOOGLE_CLIENT_ID = env_settings.google.client_id
-GOOGLE_CLIENT_SECRET = env_settings.google.client_secret
-GOOGLE_REDIRECT_URI = env_settings.google.redirect_url
 
 # Redis configuration for production
 # ----------------------------------
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": env_settings.redis.cache_location,
+        "LOCATION": "redis://localhost:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },

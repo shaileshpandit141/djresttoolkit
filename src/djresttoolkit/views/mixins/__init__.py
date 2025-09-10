@@ -1,6 +1,3 @@
-from ._retrieve_object_mixin import RetrieveObjectMixin, QuerysetNotDefinedError
+from ._retrieve_object_mixin import RetrieveObjectMixin
 
-__all__ = [
-    "RetrieveObjectMixin",
-    "QuerysetNotDefinedError",
-]
+__all__ = ["RetrieveObjectMixin"]

@@ -184,7 +184,7 @@ or
 Flushed 120 records from all models and reset IDs.
 ```
 
-###  3. BaseEnvConfig — API Reference
+### 3. BaseEnvConfig — API Reference
 
 ```python
 from djresttoolkit.envconfig import BaseEnvConfig
@@ -745,6 +745,7 @@ Retrieve a single model object using the provided filter criteria.
 
 ```python
 from rest_framework.views import APIView
+from rest_framework.response import Respone
 from django.http import JsonResponse
 from myapp.models import Book
 from djresttoolkit.mixins import RetrieveObjectMixin
@@ -752,17 +753,18 @@ from djresttoolkit.mixins import RetrieveObjectMixin
 class BookDetailView(RetrieveObjectMixin[Book], APIView):
     queryset = Book.objects.all()
 
-    def get(self, request, *args, **kwargs):
+    def not_found_detail(self) -> dict[str, str] | str:
+        return  "The requested Book was not found."
+
+    def get(self, request, *args, **kwargs) -> Respone:
         book = self.get_object(id=kwargs["id"])
-        if book:
-            return JsonResponse({"title": book.title, "author": book.author})
-        return JsonResponse({"detail": "Not found"}, status=404)
+        return Respone({"title": book.title, "author": book.author})
 ```
 
 #### Features of Retrieve Object Mixin
 
 - Simplifies object retrieval in class-based views or DRF views.
-- Returns `None` instead of raising `DoesNotExist`, making error handling easier.
+- Raise `http404` if requested resource does not extst.
 - Works with any Django model and queryset.
 
 ### 13. build_absolute_uri — API Reference
