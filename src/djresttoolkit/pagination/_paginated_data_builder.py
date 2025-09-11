@@ -1,11 +1,13 @@
 import logging
 from typing import Any
 
-from django.db.models import QuerySet
+from django.db.models import Model, QuerySet
 from rest_framework.exceptions import NotFound
 from rest_framework.request import Request
 from rest_framework.serializers import BaseSerializer
-from django.db.models import Model
+
+from djresttoolkit.serializers import EnhancedModelSerializer
+
 from ._page_number_pagination import PageNumberPagination
 
 # Get logger from logging.
@@ -18,7 +20,7 @@ class PaginatedDataBuilder[T: Model]:
     def __init__(
         self,
         request: Request,
-        serializer_class: type[BaseSerializer[T]],
+        serializer_class: type[BaseSerializer[T] | EnhancedModelSerializer[T]],
         queryset: QuerySet[T],
     ) -> None:
         """Initilize the PaginatedDataBuilder class."""
@@ -49,7 +51,7 @@ class PaginatedDataBuilder[T: Model]:
         )
 
         # Construct the paginated response
-        paginated_data = {
+        paginated_data: dict[str, Any] = {
             "page": {
                 "current": paginator.page.number,  # type: ignore
                 "total": paginator.page.paginator.num_pages,  # type: ignore

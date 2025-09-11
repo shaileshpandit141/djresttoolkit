@@ -45,10 +45,7 @@ keywords = [
     "python-package",
 ]
 requires-python = ">=3.13"
-dependencies = [
-    "faker>=37.5.3",
-    "pydantic>=2.11.7",
-]
+dependencies = ["faker>=37.5.3", "pydantic>=2.11.7"]
 
 # CLI scripts entry point configuration
 # -------------------------------------
@@ -109,12 +106,19 @@ Source = "https://github.com/shaileshpandit141/djresttoolkit"
 Issues = "https://github.com/shaileshpandit141/djresttoolkit/issues"
 License = "https://github.com/shaileshpandit141/djresttoolkit/blob/main/LICENSE"
 
-# ===================
-# Tool Configurations
-# ===================
 
+# ==========================
+# Add pyright Configurations
+# ==========================
+[tool.pyright]
+typeCheckingMode = "strict"
+reportMissingTypeStubs = false
+reportUnknownMemberType = false
+reportIncompatibleVariableOverride = false
+
+# =========================================
 # Disable ruff S101 rule for test casecases
-# -----------------------------------------
+# =========================================
 [tool.ruff.lint.per-file-ignores]
 "tests/*.py" = ["S101"]
 

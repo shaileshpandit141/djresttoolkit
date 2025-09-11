@@ -57,8 +57,18 @@ class Todo(BaseModel):
         on_delete=CASCADE,
         related_name="todos",
         help_text="Owner of this todo",
+        error_messages={
+            "null": "Every todo must belong to a user.",
+            "invalid": "Invalid user reference.",
+        },
     )
-    title: CharField[str, str] = CharField(max_length=255)
+    title: CharField[str, str] = CharField(
+        max_length=255,
+        error_messages={
+            "blank": "Please give your todo a title.",
+            "max_length": "The title cannot exceed 255 characters.",
+        },
+    )
     description: TextField[str, str] = TextField(blank=True, default="")
     due_date: DateTimeField[str | None, str | None] = DateTimeField(
         null=True,
@@ -69,16 +79,25 @@ class Todo(BaseModel):
         max_length=20,
         choices=TodoPriority.choices,
         default=TodoPriority.MEDIUM,
+        error_messages={
+            "invalid_choice": "Priority must be one of: low, medium, high, critical.",
+        },
     )
     status: CharField[str, str] = CharField(
         max_length=20,
         choices=TodoStatus.choices,
         default=TodoStatus.PENDING,
+        error_messages={
+            "invalid_choice": "Status must be one of: pending, in_progress, completed, archived.",
+        },
     )
 
     completed_at: DateTimeField[str | None, str | None] = DateTimeField(
         null=True,
         blank=True,
+        error_messages={
+            "invalid": "Completed at must be a valid datetime.",
+        },
     )
 
     def mark_completed(self) -> None:

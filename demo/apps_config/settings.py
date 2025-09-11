@@ -165,6 +165,7 @@ MEDIA_URL = "/media/"
 # -------------------------------------
 REST_FRAMEWORK = {
     "NON_FIELD_ERRORS_KEY": "non_field",
+    "DATETIME_FORMAT": "%Y-%m-%d %H:%M",
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
     ],
