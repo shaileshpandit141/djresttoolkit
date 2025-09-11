@@ -48,6 +48,8 @@ INSTALLED_APPS = [
 # ---------------------------------
 INSTALLED_APPS.extend(
     [
+        "drf_spectacular",
+        "drf_spectacular_sidecar",
         "rest_framework",
         "rest_framework.authtoken",
         "corsheaders",
@@ -187,13 +189,24 @@ REST_FRAMEWORK = {
         "anon": "100/day",
         "user": "1000/day",
     },
-    "DEFAULT_FILTER_BACKENDS": [
-        "django_filters.rest_framework.DjangoFilterBackend",
-    ],
     "EXCEPTION_HANDLER": "djresttoolkit.views.exception_handler",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 4,
     "MAX_PAGE_SIZE": 8,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "My API",
+    "DESCRIPTION": "API documentation for my Django project",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,  # Don't serve schema by default (only at /schema)
+    "SWAGGER_UI_DIST": "SIDECAR",  # use sidecar instead of CDN
+    "REDOC_DIST": "SIDECAR",
+    "SERVERS": [
+        {"url": "http://localhost:8000", "description": "Local dev"},
+        {"url": "https://api.example.com", "description": "Production"},
+    ],
 }
 
 # Authentication Configuration Settings

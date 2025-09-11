@@ -116,6 +116,7 @@ License = "https://github.com/shaileshpandit141/djresttoolkit/blob/main/LICENSE"
 typeCheckingMode = "strict"
 reportMissingTypeStubs = false
 reportUnknownMemberType = false
+reportUnknownVariableType = false
 reportIncompatibleVariableOverride = false
 
 # =========================================
