@@ -19,7 +19,7 @@ class TodoListView(APIView):
             serializer_class=TodoSerializer,
             queryset=Todo.objects.all(),
         )
-        return Response(data=pagination.get_paginated_data())
+        return Response(data=pagination.paginated_data)
 
     def post(self, request: Request) -> Response:
         serializer = TodoSerializer(

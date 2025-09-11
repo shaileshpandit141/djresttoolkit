@@ -65,3 +65,7 @@ class PaginatedDataBuilder[T: Model]:
 
         logger.debug(f"Pagination result: {paginated_data}")
         return paginated_data
+
+    @property
+    def paginated_data(self) -> dict[str, Any]:
+        return self.get_paginated_data()

@@ -914,7 +914,7 @@ from djresttoolkit.pagination import PaginatedDataBuilder
 ```python
 builder = PaginatedDataBuilder(
     request=request,
-    serializer_class=MySerializer,
+    serializer_class=BookSerializer,
     queryset=MyModel.objects.all()
 )
 ```
@@ -923,7 +923,7 @@ builder = PaginatedDataBuilder(
 - `serializer_class: type[BaseSerializer]`:- DRF serializer class for the model.
 - `queryset: QuerySet`:- Django queryset to paginate.
 
-### Paginated Data Builder Methods
+### Paginated Data Builder Methods and Property
 
 - `get_paginated_data() -> dict[str, Any]`
 
@@ -931,6 +931,10 @@ builder = PaginatedDataBuilder(
   - Serializes the paginated results.
   - Returns a dictionary with `"page"` and `"results"`.
   - Raises `NotFound` if no page data is found.
+  
+- `paginated_data -> dict[str, Any]`
+
+  - Call `paginated_data` property that internaly call `get_paginated_data()` method
 
 ### Example Response of Paginated Data Builder
 
@@ -945,8 +949,8 @@ builder = PaginatedDataBuilder(
     "previous": "http://api.example.com/items/?page=1&page-size=20"
   },
   "results": [
-    { "id": 21, "name": "Item 21" },
-    { "id": 22, "name": "Item 22" }
+    { "id": 21, "title": "Title 21" },
+    { "id": 22, "title": "Title 22" }
   ]
 }
 ```
