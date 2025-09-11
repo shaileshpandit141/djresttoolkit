@@ -1025,6 +1025,27 @@ class BookViewSet(CacheInvalidateMixin, ModelViewSet):
 - Invalidates caches when books are created, updated, or deleted.
 - Supports custom cache keys per action.
 
+### 17. EnhancedModelSerializer — API Reference
+
+A subclass of Django REST Framework’s `ModelSerializer` that automatically merges Django model field `error_messages` into the serializer field, unless explicitly overridden.
+This helps maintain consistent validation messages between the model and the serializer.
+
+#### Type Parameters
+
+- `T` (`Model`): The Django model type that the serializer corresponds to.
+
+#### Example of EnhancedModelSerializer
+
+```python
+from myapp.models import Book
+from myapp.serializers import EnhancedModelSerializer
+
+class BookSerializer(EnhancedModelSerializer[Book]):
+    class Meta:
+        model = Book
+        fields = "__all__"
+```
+
 ## 🛠️ Planned Features
 
 - Add more utils
