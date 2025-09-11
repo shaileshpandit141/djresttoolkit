@@ -1,4 +1,5 @@
 import sys
+from os import getenv
 from pathlib import Path
 
 # Configuration Settings File for the django backend
@@ -12,7 +13,7 @@ sys.path.insert(0, str(SRC_DIR))
 
 # Security Configuration Settings
 # -------------------------------
-SECRET_KEY = "asdkjasdjgasdgjioarejalk54884a651asdgklnaskdg"
+SECRET_KEY = getenv("SECRET_KEY")
 
 # DEBUG Configuration Settings
 # ----------------------------
